@@ -1,0 +1,40 @@
+.header {
+    display: grid;
+    grid-template-columns: 5fr 2fr 5fr;
+    align-items: center;
+    padding: 0 2%;
+    box-shadow: 0 0 10px #00000047;
+}
+
+.left-nav ul {
+    display: flex;
+    gap: 30px;
+}
+
+.logo {
+    text-align: center;
+}
+
+.logo img {
+    flex-grow: 1;
+    width: 200px;
+}
+
+.right-nav {
+    justify-content: end;
+}
+
+.right-nav, .right-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.right-nav ul {
+    margin-left: 20px;
+}
+
+.header ul li {
+    text-transform: uppercase;
+    font-weight: 500;
+}

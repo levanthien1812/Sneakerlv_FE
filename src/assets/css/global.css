@@ -23,6 +23,10 @@ li {
     list-style: none;
 }
 
+a:link {
+  text-decoration: none;
+}
+
 input {
     background-color: white;
     outline: none;
@@ -30,4 +34,5 @@ input {
 
 button {
     background-color: white;
+    cursor: pointer;
 }
