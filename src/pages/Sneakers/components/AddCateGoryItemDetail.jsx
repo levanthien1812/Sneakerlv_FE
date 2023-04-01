@@ -1,54 +1,62 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
-const CategoryItemDetail = ({ item }) => {
-  const [image, setImage] = useState()
-  const [price, setPrice] = useState()
-  const [quantity, setQuantity] = useState()
-  const [categoryId, setCategoryId] = useState()
-  
+const CategoryRow = ({ cate, onChangeRecord }) => {
+
+  const rowData = {
+    size: cate.size,
+    color: cate.color
+  }
+
+  const changeHandler = (event) => {
+    onChangeRecord(event, rowData)
+  }
+
   return (
     <tr>
+      {cate.color && (
+        <td>
+          <p>{cate.color}</p>
+          <input type="file" id="file" defaultValue={cate.image} onChange={changeHandler} />
+        </td>
+      )}
+      {cate.size && <td>{cate.size}</td>}
       <td>
-        <p>{item.color.value}</p>
-        <input type="file" />
+        <TextField type="number" id="price" defaultValue={cate.price} onChange={changeHandler}/>
       </td>
-      <td>{item.size.value}</td>
       <td>
-        <TextField type="number"/>
+        <TextField type="number" id="quantity" defaultValue={cate.quantity} onChange={changeHandler}/>
       </td>
       <td>
-        <TextField type="number"/>
-      </td>
-      <td>
-        <TextField type="text"/>
+        <TextField type="text" id="categoryId" defaultValue={cate.categoryId} onChange={changeHandler}/>
       </td>
     </tr>
   );
-}
+};
 
-function AddCateGoryItemDetail({ colors, sizes }) {
-  let populate = [];
-  colors.forEach((color) => {
-    sizes.forEach((size) => {
-      populate.push({ color, size });
-    });
-  });
+function AddCateGoryItemDetail({ categories, onChangeRecord }) {
+  const changeRecordHandler = (event, rowData) => {
+    onChangeRecord(event, rowData);
+  };
   return (
     <table>
       <thead>
         <tr>
-          {colors && <th>Màu sắc</th>}
-          {sizes && <th>Kích thước</th>}
+          <th>Màu sắc</th>
+          <th>Kích thước</th>
           <th>Gía tiền</th>
           <th>Kho hàng</th>
           <th>Mã phân loại</th>
         </tr>
       </thead>
       <tbody>
-        {populate.map((p) => 
-          <CategoryItemDetail item={p}/>
-        )}
+        {categories.map((cate) => (
+          <CategoryRow
+            key={Math.random()}
+            cate={cate}
+            onChangeRecord={changeRecordHandler}
+          />
+        ))}
       </tbody>
     </table>
   );

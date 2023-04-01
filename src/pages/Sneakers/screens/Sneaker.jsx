@@ -1,94 +1,72 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCategoryItems from "../components/AddCategoryItems";
 import AddCateGoryItemDetail from "../components/AddCateGoryItemDetail";
+import { Button } from "@mui/material";
+import AddSneaker from "../components/AddSneaker";
 
 function SneakerPage() {
   // manage fields states
-  const idRef = useRef();
-  const nameRef = useRef();
-  const brandRef = useRef();
-  const descriptionRef = useRef();
-  const [image, setImage] = useState();
+  const [newSneaker, setNewSneaker] = useState({})
 
   const [isColorChosen, setIsColorChosen] = useState(false);
   const [colors, setColors] = useState([]);
   const [isSizeChosen, setIsSizeChosen] = useState(false);
   const [sizes, setSizes] = useState([]);
 
-  const changeImageHandler = (event) => {
-    setImage(event.target.files[0]);
-  };
+  const [categories, setCategories] = useState([]);
 
-  const uploadImageHandler = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-
-    formData.append("id", idRef.current.value);
-    formData.append("name", nameRef.current.value);
-    formData.append("brand", brandRef.current.value);
-    formData.append("description", descriptionRef.current.value);
-    formData.append("coverImage", image);
-
-    fetch("http://localhost:3000/api/sneakers", {
-      method: "post",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Success:", result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+  useEffect(() => {
+    setCategories(() => {
+      let categoriesArr = [];
+      colors.forEach((color) => {
+        sizes.forEach((size) => {
+          categoriesArr.push({
+            color: color.value,
+            size: size.value,
+            image: "",
+            price: 0,
+            quantity: 0,
+            categoryId: "",
+          });
+        });
       });
-  };
+      return categoriesArr;
+    });
+  }, [colors, sizes, setCategories]);
+
+  
 
   const colorChangeHandler = (event) => {
     setIsColorChosen(!isColorChosen);
   };
-  
+
   const sizeChangeHandler = (event) => {
     setIsSizeChosen(!isSizeChosen);
   };
 
+  const moveToNextHandler = (categories) => {};
+
+  const changeRecordHandler = (event, rowData) => {
+    const { id, value } = event.target;
+    setCategories((prevState) => {
+      const categories = [...prevState]
+      const index = categories.findIndex(
+        (item) => (item.color === rowData.color && item.size === rowData.size)
+      );
+      categories[index][id] = value
+      return categories
+    });
+  };
+
+  const saveSneakerHandler = (snk) => {
+    setNewSneaker(snk)
+  }
+
+  console.log(newSneaker);
 
   return (
     <>
-      <form>
-        <div>
-          <label htmlFor="id">Sneaker's id: </label>
-          <input type="text" id="id" name="id" ref={idRef}></input>
-        </div>
-        <div>
-          <label htmlFor="name">Sneaker name: </label>
-          <input type="text" id="name" name="name" ref={nameRef}></input>
-        </div>
-        <div>
-          <label htmlFor="coverImage">Sneaker cover image: </label>
-          <input
-            type="file"
-            id="coverImage"
-            name="coverImage"
-            onChange={changeImageHandler}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="brand">Sneaker brand: </label>
-          <input type="text" id="brand" name="brand" ref={brandRef}></input>
-        </div>
-        <div>
-          <label htmlFor="description">Sneaker description: </label>
-          <input
-            type="text"
-            id="description"
-            name="description"
-            ref={descriptionRef}
-          ></input>
-        </div>
-        <button type="submit" onClick={uploadImageHandler}>
-          Submit
-        </button>
-      </form>
+      <AddSneaker onMoveToNext={ saveSneakerHandler } />
       <div>
         <div>
           <label>Chọn phân loại hàng: </label>
@@ -107,15 +85,29 @@ function SneakerPage() {
             value="Size"
             onChange={sizeChangeHandler}
           />
-          <label htmlFor="size">Kích cỡ</label>
+          <label htmlFor="size">Kích thước</label>
         </div>
         {isColorChosen && (
-          <AddCategoryItems label="Màu sắc" items={colors} setItems={setColors} />
+          <AddCategoryItems
+            label="Màu sắc"
+            items={colors}
+            setItems={setColors}
+          />
         )}
         {isSizeChosen && (
-          <AddCategoryItems label="Kích thước" items={sizes} setItems={setSizes} />
+          <AddCategoryItems
+            label="Kích thước"
+            items={sizes}
+            setItems={setSizes}
+          />
         )}
-        {colors.length > 0 && <AddCateGoryItemDetail colors={colors} sizes={sizes}/>} 
+        <AddCateGoryItemDetail
+          categories={categories}
+          onChangeRecord={changeRecordHandler}
+        />
+        <Button variant="primary" onClick={moveToNextHandler}>
+          Tiếp theo
+        </Button>
       </div>
     </>
   );
