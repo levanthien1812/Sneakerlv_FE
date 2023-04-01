@@ -1,4 +1,47 @@
-import React, { useRef, useState } from "react";
+import { IconButton, Chip, TextField } from "@mui/material";
+import React, { Fragment, useRef, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
+
+const ChipList = (props) => {
+  return props.items.map((item) => {
+    const deleteBtn = () => {
+      props.onDeleteInput(item.id);
+    };
+    return (
+      <Chip
+        key={item.id}
+        label={item.color}
+        variant="outlined"
+        onDelete={deleteBtn}
+      />
+    );
+  });
+};
+
+const NewInput = (props) => {
+  const [newValue, setNewValue] = useState("");
+  const saveInputHandler = () => {
+    props.onSaveInput(newValue);
+  };
+  const changeValueHandler = (event) => {
+    setNewValue(event.target.value);
+  };
+  return (
+    <>
+      <TextField
+        id="outlined-basic"
+        label="Outlined"
+        variant="outlined"
+        size="small"
+        onChange={changeValueHandler}
+      />
+      <IconButton onClick={saveInputHandler}>
+        <CheckIcon />
+      </IconButton>
+    </>
+  );
+};
 
 function SneakerPage() {
   // manage fields states
@@ -7,6 +50,12 @@ function SneakerPage() {
   const brandRef = useRef();
   const descriptionRef = useRef();
   const [image, setImage] = useState();
+
+  const [isColorChosen, setIsColorChosen] = useState(false);
+  const [colors, setColors] = useState([]);
+  const [isAddingColor, setIsAddingColor] = useState(false);
+  const [isSizeChosen, setIsSizeChosen] = useState(false);
+  const [sizes, setSizes] = useState([]);
 
   const changeImageHandler = (event) => {
     setImage(event.target.files[0]);
@@ -36,42 +85,129 @@ function SneakerPage() {
       });
   };
 
+  const colorChangeHandler = (event) => {
+    setIsColorChosen(!isColorChosen);
+  };
+
+  const addInputHandler = () => {
+    setIsAddingColor(true);
+  };
+
+  const saveInputHandler = (value) => {
+    const color = {
+      id: Math.round(Math.random() * 1000),
+      color: value,
+    };
+
+    setColors(prevColors => {
+      if (colors.length === 0) {
+        return [color]
+      }
+      return [...prevColors, color]
+    });
+
+    setIsAddingColor(false);
+  };
+
+  const deleteInputHandler = (id) => {
+    setColors((prevColors) => prevColors.filter((color) => color.id !== id));
+  };
+
+  
+  const sizeChangeHandler = (event) => {
+    setIsSizeChosen(!isSizeChosen);
+  };
+
+
   return (
-    <form>
+    <>
+      <form>
+        <div>
+          <label htmlFor="id">Sneaker's id: </label>
+          <input type="text" id="id" name="id" ref={idRef}></input>
+        </div>
+        <div>
+          <label htmlFor="name">Sneaker name: </label>
+          <input type="text" id="name" name="name" ref={nameRef}></input>
+        </div>
+        <div>
+          <label htmlFor="coverImage">Sneaker cover image: </label>
+          <input
+            type="file"
+            id="coverImage"
+            name="coverImage"
+            onChange={changeImageHandler}
+          ></input>
+        </div>
+        <div>
+          <label htmlFor="brand">Sneaker brand: </label>
+          <input type="text" id="brand" name="brand" ref={brandRef}></input>
+        </div>
+        <div>
+          <label htmlFor="description">Sneaker description: </label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            ref={descriptionRef}
+          ></input>
+        </div>
+        <button type="submit" onClick={uploadImageHandler}>
+          Submit
+        </button>
+      </form>
       <div>
-        <label htmlFor="id">Sneaker's id: </label>
-        <input type="text" id="id" name="id" ref={idRef}></input>
+        <div>
+          <label>Chọn phân loại hàng: </label>
+          <input
+            type="checkbox"
+            id="color"
+            name="color"
+            value="Color"
+            onChange={colorChangeHandler}
+          />
+          <label htmlFor="color">Màu sắc</label>
+          <input
+            type="checkbox"
+            id="size"
+            name="size"
+            value="Size"
+            onChange={sizeChangeHandler}
+          />
+          <label htmlFor="size">Kích cỡ</label>
+        </div>
+        {isColorChosen && (
+          <div>
+            <p>Thêm loại màu sắc</p>
+            <div>
+              {colors.length === 0 && (
+                <NewInput onSaveInput={saveInputHandler} />
+              )}
+              {colors.length !== 0 && (
+                <ChipList items={colors} onDeleteInput={deleteInputHandler} />
+              )}
+              {!isAddingColor && colors.length !== 0 && (
+                <IconButton variant="contained" onClick={addInputHandler}>
+                  <AddIcon />
+                </IconButton>
+              )}
+              {isAddingColor && <NewInput onSaveInput={saveInputHandler} />}
+            </div>
+          </div>
+        )}
+        {isSizeChosen && (
+          <div>
+            <p>Thêm loại kích thước</p>
+            <div>
+              <div>
+                <input></input>
+              </div>
+              <button>+</button>
+            </div>
+          </div>
+        )}
       </div>
-      <div>
-        <label htmlFor="name">Sneaker name: </label>
-        <input type="text" id="name" name="name" ref={nameRef}></input>
-      </div>
-      <div>
-        <label htmlFor="coverImage">Sneaker cover image: </label>
-        <input
-          type="file"
-          id="coverImage"
-          name="coverImage"
-          onChange={changeImageHandler}
-        ></input>
-      </div>
-      <div>
-        <label htmlFor="brand">Sneaker brand: </label>
-        <input type="text" id="brand" name="brand" ref={brandRef}></input>
-      </div>
-      <div>
-        <label htmlFor="description">Sneaker description: </label>
-        <input
-          type="text"
-          id="description"
-          name="description"
-          ref={descriptionRef}
-        ></input>
-      </div>
-      <button type="submit" onClick={uploadImageHandler}>
-        Submit
-      </button>
-    </form>
+    </>
   );
 }
 
