@@ -1,47 +1,6 @@
-import { IconButton, Chip, TextField } from "@mui/material";
-import React, { Fragment, useRef, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import CheckIcon from "@mui/icons-material/Check";
-
-const ChipList = (props) => {
-  return props.items.map((item) => {
-    const deleteBtn = () => {
-      props.onDeleteInput(item.id);
-    };
-    return (
-      <Chip
-        key={item.id}
-        label={item.color}
-        variant="outlined"
-        onDelete={deleteBtn}
-      />
-    );
-  });
-};
-
-const NewInput = (props) => {
-  const [newValue, setNewValue] = useState("");
-  const saveInputHandler = () => {
-    props.onSaveInput(newValue);
-  };
-  const changeValueHandler = (event) => {
-    setNewValue(event.target.value);
-  };
-  return (
-    <>
-      <TextField
-        id="outlined-basic"
-        label="Outlined"
-        variant="outlined"
-        size="small"
-        onChange={changeValueHandler}
-      />
-      <IconButton onClick={saveInputHandler}>
-        <CheckIcon />
-      </IconButton>
-    </>
-  );
-};
+import React, { useRef, useState } from "react";
+import AddCategoryItems from "../components/AddCategoryItems";
+import AddCateGoryItemDetail from "../components/AddCateGoryItemDetail";
 
 function SneakerPage() {
   // manage fields states
@@ -53,7 +12,6 @@ function SneakerPage() {
 
   const [isColorChosen, setIsColorChosen] = useState(false);
   const [colors, setColors] = useState([]);
-  const [isAddingColor, setIsAddingColor] = useState(false);
   const [isSizeChosen, setIsSizeChosen] = useState(false);
   const [sizes, setSizes] = useState([]);
 
@@ -88,31 +46,6 @@ function SneakerPage() {
   const colorChangeHandler = (event) => {
     setIsColorChosen(!isColorChosen);
   };
-
-  const addInputHandler = () => {
-    setIsAddingColor(true);
-  };
-
-  const saveInputHandler = (value) => {
-    const color = {
-      id: Math.round(Math.random() * 1000),
-      color: value,
-    };
-
-    setColors(prevColors => {
-      if (colors.length === 0) {
-        return [color]
-      }
-      return [...prevColors, color]
-    });
-
-    setIsAddingColor(false);
-  };
-
-  const deleteInputHandler = (id) => {
-    setColors((prevColors) => prevColors.filter((color) => color.id !== id));
-  };
-
   
   const sizeChangeHandler = (event) => {
     setIsSizeChosen(!isSizeChosen);
@@ -177,35 +110,12 @@ function SneakerPage() {
           <label htmlFor="size">Kích cỡ</label>
         </div>
         {isColorChosen && (
-          <div>
-            <p>Thêm loại màu sắc</p>
-            <div>
-              {colors.length === 0 && (
-                <NewInput onSaveInput={saveInputHandler} />
-              )}
-              {colors.length !== 0 && (
-                <ChipList items={colors} onDeleteInput={deleteInputHandler} />
-              )}
-              {!isAddingColor && colors.length !== 0 && (
-                <IconButton variant="contained" onClick={addInputHandler}>
-                  <AddIcon />
-                </IconButton>
-              )}
-              {isAddingColor && <NewInput onSaveInput={saveInputHandler} />}
-            </div>
-          </div>
+          <AddCategoryItems label="Màu sắc" items={colors} setItems={setColors} />
         )}
         {isSizeChosen && (
-          <div>
-            <p>Thêm loại kích thước</p>
-            <div>
-              <div>
-                <input></input>
-              </div>
-              <button>+</button>
-            </div>
-          </div>
+          <AddCategoryItems label="Kích thước" items={sizes} setItems={setSizes} />
         )}
+        {colors.length > 0 && <AddCateGoryItemDetail colors={colors} sizes={sizes}/>} 
       </div>
     </>
   );
