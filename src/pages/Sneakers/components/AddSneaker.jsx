@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import React from "react";
 import { useRef, useState } from "react";
 
@@ -53,33 +53,53 @@ function AddSneaker(props) {
       <form>
         <div>
           <label htmlFor="id">Sneaker's id: </label>
-          <input type="text" id="id" name="id" ref={idRef}></input>
+          <TextField
+            size="small"
+            type="text"
+            id="id"
+            name="id"
+            ref={idRef}
+          ></TextField>
         </div>
         <div>
           <label htmlFor="name">Sneaker name: </label>
-          <input type="text" id="name" name="name" ref={nameRef}></input>
+          <TextField
+            size="small"
+            type="text"
+            id="name"
+            name="name"
+            ref={nameRef}
+          ></TextField>
         </div>
         <div>
           <label htmlFor="coverImage">Sneaker cover image: </label>
-          <input
+          <TextField
+            size="small"
             type="file"
             id="coverImage"
             name="coverImage"
             onChange={changeImageHandler}
-          ></input>
+          ></TextField>
         </div>
         <div>
           <label htmlFor="brand">Sneaker brand: </label>
-          <input type="text" id="brand" name="brand" ref={brandRef}></input>
+          <TextField
+            size="small"
+            type="text"
+            id="brand"
+            name="brand"
+            ref={brandRef}
+          ></TextField>
         </div>
         <div>
           <label htmlFor="description">Sneaker description: </label>
-          <input
+          <TextField
+            size="small"
             type="text"
             id="description"
             name="description"
             ref={descriptionRef}
-          ></input>
+          ></TextField>
         </div>
         <Button variant="primary" type="button" onClick={moveToNextHandler}>
           Tiếp theo

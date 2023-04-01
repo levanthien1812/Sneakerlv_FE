@@ -17,18 +17,18 @@ const CategoryRow = ({ cate, onChangeRecord }) => {
       {cate.color && (
         <td>
           <p>{cate.color}</p>
-          <input type="file" id="file" defaultValue={cate.image} onChange={changeHandler} />
+          <input type="file" id="file" onBlur={changeHandler} />
         </td>
       )}
       {cate.size && <td>{cate.size}</td>}
       <td>
-        <TextField type="number" id="price" defaultValue={cate.price} onChange={changeHandler}/>
+        <TextField type="number" id="price" defaultValue={cate.price} onBlur={changeHandler}/>
       </td>
       <td>
-        <TextField type="number" id="quantity" defaultValue={cate.quantity} onChange={changeHandler}/>
+        <TextField type="number" id="quantity" defaultValue={cate.quantity} onBlur={changeHandler}/>
       </td>
       <td>
-        <TextField type="text" id="categoryId" defaultValue={cate.categoryId} onChange={changeHandler}/>
+        <TextField type="text" id="categoryId" defaultValue={cate.categoryId} onBlur={changeHandler}/>
       </td>
     </tr>
   );
