@@ -4,26 +4,22 @@ import AddCategories from "../components/AddCategories";
 
 function SneakerPage() {
   // manage fields states
-  const [newSneaker, setNewSneaker] = useState({})
-  const [newSneakerCategories, setNewSneakerCategories] = useState([])
+  const [newSneaker, setNewSneaker] = useState({});
+  const [newSneakerCategories, setNewSneakerCategories] = useState([]);
 
-  
   const saveSneakerHandler = (snk) => {
-    setNewSneaker(snk)
-  }
-
-  const saveSneakerCategoriesHandler = (snkCate) => {
-    setNewSneakerCategories(snkCate)
-  }
+    setNewSneaker(snk);
+  };
 
   console.log(newSneaker);
-  console.log(newSneakerCategories)
+  console.log(newSneakerCategories);
 
-  // Hoan thanh buoc 1 moi duoc thuc hien buoc 2
   return (
     <>
-      <AddSneaker onMoveToNext={ saveSneakerHandler } />
-      <AddCategories onMoveToNext={ saveSneakerCategoriesHandler } />
+      <AddSneaker onMoveToNext={saveSneakerHandler} />
+      <AddCategories
+        setNewSneakerCategories={setNewSneakerCategories}
+      />
     </>
   );
 }
