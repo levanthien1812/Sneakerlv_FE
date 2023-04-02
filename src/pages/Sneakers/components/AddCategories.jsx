@@ -1,59 +1,76 @@
-import React, { useEffect, useState } from 'react'
-import AddCateGoryItemDetail from './AddCateGoryItemDetail';
-import AddCategoryItems from './AddCategoryItems';
-import { Button } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import AddCateGoryItemDetail from "./AddCateGoryItemDetail";
+import AddCategoryItems from "./AddCategoryItems";
 
 function AddCategories(props) {
+  const [isColorChosen, setIsColorChosen] = useState(false);
+  const [colors, setColors] = useState([]);
+  const [isSizeChosen, setIsSizeChosen] = useState(false);
+  const [sizes, setSizes] = useState([]);
 
-    const [isColorChosen, setIsColorChosen] = useState(false);
-    const [colors, setColors] = useState([]);
-    const [isSizeChosen, setIsSizeChosen] = useState(false);
-    const [sizes, setSizes] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-      setCategories(() => {
-        let categoriesArr = [];
+  useEffect(() => {
+    setCategories(() => {
+      let categoriesArr = [];
+      const cate = {
+        image: "",
+        price: 0,
+        quantity: 0,
+        categoryId: "",
+      };
+      if (colors.length > 0) {
         colors.forEach((color) => {
-          sizes.forEach((size) => {
-            categoriesArr.push({
-              color: color.value,
-              size: size.value,
-              image: "",
-              price: 0,
-              quantity: 0,
-              categoryId: "",
+          if (sizes.length > 0)
+            sizes.forEach((size) => {
+              categoriesArr.push({
+                ...cate,
+                color: color.value,
+                size: size.value,
+              });
             });
+          else
+            categoriesArr.push({
+              ...cate,
+              color: color.value,
+              size: undefined,
+            });
+        });
+      } else if (sizes.length > 0) {
+        sizes.forEach((size) => {
+          categoriesArr.push({
+            ...cate,
+            color: undefined,
+            size: size.value,
           });
         });
-        return categoriesArr;
-      });
-    }, [colors, sizes, setCategories]);
+      }
 
-    const colorChangeHandler = (event) => {
-      setIsColorChosen(!isColorChosen);
-    };
+      return categoriesArr;
+    });
+  }, [colors, sizes, setCategories]);
 
-    const sizeChangeHandler = (event) => {
-      setIsSizeChosen(!isSizeChosen);
-    };
+  const colorChangeHandler = () => {
+    setIsColorChosen(!isColorChosen);
+  };
 
-    const moveToNextHandler = () => {
-        props.onMoveToNext(categories)
-    };
+  const sizeChangeHandler = () => {
+    setIsSizeChosen(!isSizeChosen);
+  };
 
-    const changeRecordHandler = (event, rowData) => {
-      const { id, value } = event.target;
-      setCategories((prevState) => {
-        const categories = [...prevState];
-        const index = categories.findIndex(
-          (item) => item.color === rowData.color && item.size === rowData.size
-        );
-        categories[index][id] = value;
-        return categories;
-      });
-    };
+  const changeRecordHandler = (event, rowData) => {
+    const { id, value, files } = event.target;
+    const cates = [...categories];
+    const index = cates.findIndex(
+      (item) => item.color === rowData.color && item.size === rowData.size
+    );
+    cates[index][id] = value;
+    if (files) {
+      cates[index]["image"] = files[0];
+    }
+    setCategories(cates);
+    props.setNewSneakerCategories(cates);
+  };
 
   return (
     <div>
@@ -87,14 +104,13 @@ function AddCategories(props) {
         />
       )}
       <AddCateGoryItemDetail
+        sizesLength={sizes.length}
+        colorsLength={colors.length}
         categories={categories}
         onChangeRecord={changeRecordHandler}
       />
-      <Button variant="primary" onClick={moveToNextHandler}>
-        Tiếp theo
-      </Button>
     </div>
   );
 }
 
-export default AddCategories
+export default AddCategories;
