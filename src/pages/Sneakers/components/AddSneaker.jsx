@@ -1,16 +1,29 @@
 import { Button, TextField } from "@mui/material";
 import React from "react";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import BrandSelect from "./BrandSelect";
 
 function AddSneaker(props) {
-  const idRef = useRef("");
-  const nameRef = useRef("");
-  const brandRef = useRef("");
-  const descriptionRef = useRef("");
-  const [image, setImage] = useState();
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [brand, setBrand] = useState("");
+  const [coverImage, setCoverImage] = useState();
+
+  const idChangeHandler = (event) => {
+    setId(event.target.value);
+  };
+
+  const nameChangeHandler = (event) => {
+    setName(event.target.value);
+  };
+
+  const descriptionChangeHandler = (event) => {
+    setDescription(event.target.value);
+  };
 
   const changeImageHandler = (event) => {
-    setImage(event.target.files[0]);
+    setCoverImage(event.target.files[0]);
   };
 
   //   const uploadImageHandler = async (event) => {
@@ -39,11 +52,11 @@ function AddSneaker(props) {
 
   const moveToNextHandler = () => {
     const newSneaker = {
-      id: idRef.current.value,
-      name: nameRef.current.value,
-      brand: brandRef.current.value,
-      description: descriptionRef.current.value,
-      coverImage: image,
+      id,
+      name,
+      description,
+      brand,
+      coverImage,
     };
     props.onMoveToNext(newSneaker);
   };
@@ -58,7 +71,8 @@ function AddSneaker(props) {
             type="text"
             id="id"
             name="id"
-            ref={idRef}
+            value={id}
+            onChange={idChangeHandler}
           ></TextField>
         </div>
         <div>
@@ -68,7 +82,8 @@ function AddSneaker(props) {
             type="text"
             id="name"
             name="name"
-            ref={nameRef}
+            value={name}
+            onChange={nameChangeHandler}
           ></TextField>
         </div>
         <div>
@@ -82,14 +97,7 @@ function AddSneaker(props) {
           ></TextField>
         </div>
         <div>
-          <label htmlFor="brand">Sneaker brand: </label>
-          <TextField
-            size="small"
-            type="text"
-            id="brand"
-            name="brand"
-            ref={brandRef}
-          ></TextField>
+          <BrandSelect brand={brand} setBrand={setBrand} />
         </div>
         <div>
           <label htmlFor="description">Sneaker description: </label>
@@ -98,10 +106,11 @@ function AddSneaker(props) {
             type="text"
             id="description"
             name="description"
-            ref={descriptionRef}
+            value={description}
+            onChange={descriptionChangeHandler}
           ></TextField>
         </div>
-        <Button variant="primary" type="button" onClick={moveToNextHandler}>
+        <Button variant="outlined" type="button" onClick={moveToNextHandler}>
           Tiếp theo
         </Button>
       </form>
