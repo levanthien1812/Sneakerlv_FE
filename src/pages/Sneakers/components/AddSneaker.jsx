@@ -26,30 +26,6 @@ function AddSneaker(props) {
     setCoverImage(event.target.files[0]);
   };
 
-  //   const uploadImageHandler = async (event) => {
-  //     event.preventDefault();
-
-  //     const formData = new FormData();
-
-  //     formData.append("id", idRef.current.value);
-  //     formData.append("name", nameRef.current.value);
-  //     formData.append("brand", brandRef.current.value);
-  //     formData.append("description", descriptionRef.current.value);
-  //     formData.append("coverImage", image);
-
-  //     fetch("http://localhost:3000/api/sneakers", {
-  //       method: "post",
-  //       body: formData,
-  //     })
-  //       .then((response) => response.json())
-  //       .then((result) => {
-  //         console.log("Success:", result);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error:", error);
-  //       });
-  //   };
-
   const moveToNextHandler = () => {
     const newSneaker = {
       id,
