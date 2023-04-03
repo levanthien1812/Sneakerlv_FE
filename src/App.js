@@ -3,6 +3,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import SneakerPage from './pages/Sneakers/screens/Sneaker';
 import Header from './components/header/Header';
 import Layout from './components/Layout';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 const route = createBrowserRouter([
   {
@@ -12,14 +14,18 @@ const route = createBrowserRouter([
       {
         path: 'sneaker',
         element: <SneakerPage />,
-        // action: createSneaker
+      },
+      {
+        path: 'login'
       }
     ]
   }
 ])
 
 function App() {
-  return <RouterProvider router={route}/>
+  return <Provider store={store}>
+    <RouterProvider router={route} />
+  </Provider>
 }
 
 export default App;
