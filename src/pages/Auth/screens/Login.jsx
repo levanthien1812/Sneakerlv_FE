@@ -8,11 +8,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../../components/UI/Modal";
 import { actions as authActions } from "../../../store/auth";
 import { useDispatch } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import jwt_decode from "jwt-decode";
 
 function LoginModal() {
   const dispatch = useDispatch();
@@ -29,6 +30,59 @@ function LoginModal() {
     setPassword(event.target.value);
   };
 
+  const setToken = (token) => {
+    const expiration = new Date();
+    expiration.setHours(expiration.getHours() + parseInt(1));
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("expiration", expiration.toISOString());
+  };
+
+  const callbackResponseHandler = async (response) => {
+    console.log("Encoded JWT ID token: " + response.credential);
+    const userDecoded = jwt_decode(response.credential);
+    console.log(userDecoded);
+
+    const user = {
+      name: userDecoded.name,
+      email: userDecoded.email,
+      picture: userDecoded.picture,
+    };
+
+    console.log(JSON.stringify(user));
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/create-google-user",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        }
+      );
+      const data = await response.json();
+      setToken(data.token);
+      dispatch(authActions.login());
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
+  useEffect(() => {
+    google.accounts.id.initialize({
+      client_id:
+        "396993378300-o0fcpjn2394autvsiksa0rvvqf1suooq.apps.googleusercontent.com",
+      callback: callbackResponseHandler,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("signInByGoogleDiv"),
+      { theme: "outline", size: "large" }
+    );
+  }, []);
+
   const loginHandler = async (event) => {
     event.preventDefault();
     try {
@@ -44,16 +98,10 @@ function LoginModal() {
 
       if (data.status === "fail") {
         setError(data.message);
-        setEmail('')
-        setPassword('')
+        setEmail("");
+        setPassword("");
       } else {
-        const token = data.token;
-        const expiration = new Date();
-        expiration.setHours(expiration.getHours() + parseInt(1));
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("expiration", expiration.toISOString());
-
+        setToken(data.token);
         dispatch(authActions.login());
       }
     } catch (e) {
@@ -109,6 +157,7 @@ function LoginModal() {
           Login
         </Button>
       </form>
+      <div id="signInByGoogleDiv"></div>
     </Modal>
   );
 }

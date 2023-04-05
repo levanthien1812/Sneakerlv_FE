@@ -1,9 +1,10 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 // import SneakerPage, { action as createSneaker } from './pages/Sneaker';
 import SneakerPage from './pages/Sneakers/screens/Sneaker';
-import Layout from './components/Layout';
+import Layout from './components/layout';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import { useEffect } from 'react';
 
 const route = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const route = createBrowserRouter([
     ]
   }
 ])
+
 
 function App() {
   return <Provider store={store}>
