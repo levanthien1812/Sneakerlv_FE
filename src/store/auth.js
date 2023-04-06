@@ -4,34 +4,20 @@ const initialAuthState = {
     isSignedUp: false,
     isLoggingIn: false,
     isSigningUp: false,
-    isAuthenticated: false
 }
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: initialAuthState,
     reducers: {
-        openLogin(state) {
-            state.isLoggingIn = true
+        setIsLoggingIn(state, action) {
+            state.isLoggingIn = action.payload
         },
-        closeLogin(state) {
-            state.isLoggingIn = false
-        },
-        openSignup(state) {
-            state.isSigningUp = true
-        },
-        closeSignup(state) {
-            state.isSigningUp = false
-        },
-        login(state) {
-            state.isAuthenticated = true
-        },
-        logout(state) {
-            state.isAuthenticated = false
+        setIsSigningUp(state, action) {
+            state.isLoggingIn = action.payload
         },
         signup(state) {
-            state.isSignedUp = true
-            state.isAuthenticated = false
+            state.isSigningUp = false
         }
     }
 })

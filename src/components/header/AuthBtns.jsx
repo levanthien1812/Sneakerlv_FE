@@ -11,7 +11,7 @@ function AuthBtns() {
   const isLoggingIn = useSelector(state => state.auth.isLoggingIn)
 
   const showLoginHandler = () => {
-    dispatch(authActions.openLogin());
+    dispatch(authActions.setIsLoggingIn(true));
   };
 
   return (

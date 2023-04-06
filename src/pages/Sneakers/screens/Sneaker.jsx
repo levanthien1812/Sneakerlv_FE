@@ -34,6 +34,7 @@ function SneakerPage() {
       console.log("Success!");
     }
 
+    if (newSneakerCategories.length === 0) return;
     await Promise.all(
       newSneakerCategories.forEach(async (snkCate) => {
         const categoryFormdata = new FormData();
