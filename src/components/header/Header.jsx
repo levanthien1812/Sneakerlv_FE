@@ -3,8 +3,12 @@ import AuthBtns from "./AuthBtns";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/sneakerlv.png"
 import classes from './Header.module.css'
+import { useSelector } from "react-redux";
+import UserCartBtns from "./UserCartBtns";
+import { isAuthenticated } from "../../utils/auth";
 
 function Header() {
+  const isAuth = isAuthenticated()
   return (
     <div className={classes.header}>
       <nav className={classes["left-nav"]}>
@@ -41,7 +45,8 @@ function Header() {
             <NavLink>Location</NavLink>
           </li>
         </ul>
-        <AuthBtns />
+        {!isAuth && <AuthBtns />}
+        {isAuth && <UserCartBtns/>}
       </nav>
     </div>
   );

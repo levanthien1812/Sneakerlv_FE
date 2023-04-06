@@ -38,7 +38,7 @@ function LoginModal() {
     localStorage.setItem("expiration", expiration.toISOString());
   };
 
-  const callbackResponseHandler = async (response) => {
+  const loginGoogleHandler = async (response) => {
     console.log("Encoded JWT ID token: " + response.credential);
     const userDecoded = jwt_decode(response.credential);
     console.log(userDecoded);
@@ -64,7 +64,7 @@ function LoginModal() {
       );
       const data = await response.json();
       setToken(data.token);
-      dispatch(authActions.login());
+      dispatch(authActions.setIsLoggingIn(false));
     } catch (e) {
       console.log(e.message);
     }
@@ -74,7 +74,7 @@ function LoginModal() {
     google.accounts.id.initialize({
       client_id:
         "396993378300-o0fcpjn2394autvsiksa0rvvqf1suooq.apps.googleusercontent.com",
-      callback: callbackResponseHandler,
+      callback: loginGoogleHandler,
     });
 
     google.accounts.id.renderButton(
@@ -102,7 +102,7 @@ function LoginModal() {
         setPassword("");
       } else {
         setToken(data.token);
-        dispatch(authActions.login());
+        dispatch(authActions.setIsLoggingIn(false));
       }
     } catch (e) {
       console.log(e.message);
@@ -116,7 +116,7 @@ function LoginModal() {
   };
 
   return (
-    <Modal onCloseModal={dispatch.bind(this, authActions.closeLogin())}>
+    <Modal onCloseModal={dispatch.bind(this, authActions.setIsLoggingIn(false))}>
       <Typography fontSize={20} mb={2}>
         Đăng nhập
       </Typography>
