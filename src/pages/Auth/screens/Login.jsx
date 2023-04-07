@@ -14,6 +14,7 @@ import { actions as authActions } from "../../../store/auth";
 import { useDispatch } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import jwt_decode from "jwt-decode";
+import { setToken } from "../../../utils/auth";
 
 function LoginModal() {
   const dispatch = useDispatch();
@@ -30,26 +31,14 @@ function LoginModal() {
     setPassword(event.target.value);
   };
 
-  const setToken = (token) => {
-    const expiration = new Date();
-    expiration.setHours(expiration.getHours() + parseInt(1));
-
-    localStorage.setItem("token", token);
-    localStorage.setItem("expiration", expiration.toISOString());
-  };
-
   const loginGoogleHandler = async (response) => {
-    console.log("Encoded JWT ID token: " + response.credential);
     const userDecoded = jwt_decode(response.credential);
-    console.log(userDecoded);
 
     const user = {
       name: userDecoded.name,
       email: userDecoded.email,
       picture: userDecoded.picture,
     };
-
-    console.log(JSON.stringify(user));
 
     try {
       const response = await fetch(
@@ -64,6 +53,7 @@ function LoginModal() {
       );
       const data = await response.json();
       setToken(data.token);
+      dispatch(authActions.setAuth())
       dispatch(authActions.setIsLoggingIn(false));
     } catch (e) {
       console.log(e.message);
@@ -102,6 +92,7 @@ function LoginModal() {
         setPassword("");
       } else {
         setToken(data.token);
+        dispatch(authActions.setAuth());
         dispatch(authActions.setIsLoggingIn(false));
       }
     } catch (e) {
