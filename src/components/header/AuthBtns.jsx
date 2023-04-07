@@ -5,13 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { actions as authActions } from "../../store/auth";
 import { actions as UIActions } from "../../store/ui";
 import LoginModal from "../../pages/Auth/screens/Login";
+import SignupModal from "../../pages/Auth/screens/Signup";
 
 function AuthBtns() {
   const dispatch = useDispatch();
-  const isLoggingIn = useSelector(state => state.auth.isLoggingIn)
+  const isLoggingIn = useSelector((state) => state.auth.isLoggingIn);
+  const isSigningUp = useSelector((state) => state.auth.isSigningUp);
 
   const showLoginHandler = () => {
     dispatch(authActions.setIsLoggingIn(true));
+  };
+  const showSignupHandler = () => {
+    dispatch(authActions.setIsSigningUp(true));
   };
 
   return (
@@ -26,15 +31,19 @@ function AuthBtns() {
           Login
         </button>
       </div>
-      {isLoggingIn && <LoginModal/>}
-      
+      {isLoggingIn && <LoginModal />}
+
       <div
         className={`${classes["btn-container"]} ${classes["signup-container"]}`}
       >
-        <button className={`${classes.btn} ${classes["signup-btn"]}`}>
+        <button
+          className={`${classes.btn} ${classes["signup-btn"]}`}
+          onClick={showSignupHandler}
+        >
           Signup
         </button>
       </div>
+      {isSigningUp && <SignupModal />}
     </div>
   );
 }

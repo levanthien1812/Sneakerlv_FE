@@ -1,9 +1,4 @@
-import {
-    useDispatch
-} from "react-redux"
-import {
-    actions as authActions
-} from "../store/auth"
+
 export function isTokenExpired() {
     const loginTimeISO = localStorage.getItem('login-time')
     const loginTime = new Date(loginTimeISO)
@@ -22,7 +17,7 @@ export const setToken = (token) => {
 
 export function getAuthToken() {
     const token = localStorage.getItem('token')
-    if (!token) return null
+    if (!token || token === 'undefined') return null
 
     if (isTokenExpired()) return 'EXPIRED'
 

@@ -16,7 +16,7 @@ const authSlice = createSlice({
             state.isLoggingIn = action.payload
         },
         setIsSigningUp(state, action) {
-            state.isLoggingIn = action.payload
+            state.isSigningUp = action.payload
         },
         signup(state) {
             state.isSigningUp = false

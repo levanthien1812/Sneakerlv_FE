@@ -8,13 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "../../../components/UI/Modal";
 import { actions as authActions } from "../../../store/auth";
 import { useDispatch } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import jwt_decode from "jwt-decode";
 import { setToken } from "../../../utils/auth";
+import { LoginGoogle } from "../../../utils/loginGoogle";
 
 function LoginModal() {
   const dispatch = useDispatch();
@@ -30,48 +30,6 @@ function LoginModal() {
   const changePasswordHandler = (event) => {
     setPassword(event.target.value);
   };
-
-  const loginGoogleHandler = async (response) => {
-    const userDecoded = jwt_decode(response.credential);
-
-    const user = {
-      name: userDecoded.name,
-      email: userDecoded.email,
-      picture: userDecoded.picture,
-    };
-
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/users/create-google-user",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
-      const data = await response.json();
-      setToken(data.token);
-      dispatch(authActions.setAuth())
-      dispatch(authActions.setIsLoggingIn(false));
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  useEffect(() => {
-    google.accounts.id.initialize({
-      client_id:
-        "396993378300-o0fcpjn2394autvsiksa0rvvqf1suooq.apps.googleusercontent.com",
-      callback: loginGoogleHandler,
-    });
-
-    google.accounts.id.renderButton(
-      document.getElementById("signInByGoogleDiv"),
-      { theme: "outline", size: "large" }
-    );
-  }, []);
 
   const loginHandler = async (event) => {
     event.preventDefault();
@@ -106,8 +64,15 @@ function LoginModal() {
     event.preventDefault();
   };
 
+    const convertToSignupHandler = () => {
+      dispatch(authActions.setIsLoggingIn(false));
+      dispatch(authActions.setIsSigningUp(true));
+    };
+
   return (
-    <Modal onCloseModal={dispatch.bind(this, authActions.setIsLoggingIn(false))}>
+    <Modal
+      onCloseModal={dispatch.bind(this, authActions.setIsLoggingIn(false))}
+    >
       <Typography fontSize={20} mb={2}>
         Đăng nhập
       </Typography>
@@ -147,8 +112,15 @@ function LoginModal() {
         <Button variant="contained" type="submit" onClick={loginHandler}>
           Login
         </Button>
+        <Button
+          variant="outlined"
+          type="button"
+          onClick={convertToSignupHandler}
+        >
+          Sign Up
+        </Button>
       </form>
-      <div id="signInByGoogleDiv"></div>
+      <LoginGoogle />
     </Modal>
   );
 }
