@@ -3,7 +3,7 @@ import AddSneaker from "../components/AddSneaker";
 import AddCategories from "../components/AddCategories";
 import { Button } from "@mui/material";
 
-function SneakerPage() {
+function AddSneakerPage() {
   // manage fields states
   const [newSneaker, setNewSneaker] = useState({});
   const [newSneakerCategories, setNewSneakerCategories] = useState([]);
@@ -76,4 +76,4 @@ function SneakerPage() {
   );
 }
 
-export default SneakerPage;
+export default AddSneakerPage;

@@ -1,10 +1,10 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-// import SneakerPage, { action as createSneaker } from './pages/Sneaker';
-import SneakerPage from './pages/Sneakers/screens/Sneaker';
+import AddSneakerPage from './pages/Sneakers/screens/AddSneaker';
 import Layout from './components/layout';
 import { Provider, useDispatch } from 'react-redux';
 import store from './store/store';
 import { useEffect } from 'react';
+import SneakersPage from './pages/Sneakers/screens/Sneakers';
 
 const route = createBrowserRouter([
   {
@@ -12,8 +12,17 @@ const route = createBrowserRouter([
     element: <Layout/>,
     children: [
       {
-        path: 'sneaker',
-        element: <SneakerPage />,
+        path: 'sneakers',
+        children: [
+          {
+            index: true,
+            element: <SneakersPage/>
+          },
+          {
+            path: 'add',
+            element: <AddSneakerPage/>
+          }
+        ]
       },
       {
         path: 'login'
