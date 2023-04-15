@@ -1,5 +1,5 @@
 import { createSlice, isAllOf } from "@reduxjs/toolkit";
-import { getAuthToken, isAuthened } from "../utils/auth";
+import { getAuthToken, isAuthened, logout } from "../utils/auth";
 
 const initialAuthState = {
     isSignedUp: false,
@@ -20,12 +20,17 @@ const authSlice = createSlice({
         },
         signup(state) {
             state.isSigningUp = false
+            state.isLoggingIn = true
         },
         setAuth(state) {
             const token = getAuthToken()
             if (token === 'EXPIRED' || token === null)
                 state.isAuthenticated = false
             else state.isAuthenticated = true
+        },
+        logout(state) {
+            logout()
+            state.isAuthenticated = false
         }
     }
 })

@@ -1,0 +1,31 @@
+.alert {
+    position: absolute;
+  left: 50%;
+  top: 1rem;
+  translate: -50% 0;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 40;
+  animation: slide-down-up 3000ms ease forwards;
+}
+
+@keyframes slide-down-up {
+  0% {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+}

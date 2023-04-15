@@ -1,4 +1,3 @@
-
 export function isTokenExpired() {
     const loginTimeISO = localStorage.getItem('login-time')
     const loginTime = new Date(loginTimeISO)
@@ -34,4 +33,11 @@ export function isAuthened() {
     const token = getAuthToken()
     if (token === 'EXPIRED' || token === null) return false
     return true
+}
+
+export function logout() {
+    if (localStorage.getItem('token') && localStorage.getItem('login-time')) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('login-time')
+    }
 }

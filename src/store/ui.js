@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialUIState = {
     isModalShown: false,
+    isNotifShown: false
 }
 
 const UISlide = createSlice({
@@ -13,7 +14,13 @@ const UISlide = createSlice({
         },
         hideModal(state) {
             state.isModalShown = false
-        }
+        },
+        showNotification(state) {
+            state.isNotifShown = true
+        },
+        hideNotification(state) {
+            state.isNotifShown = false
+        },
     }
 })
 
