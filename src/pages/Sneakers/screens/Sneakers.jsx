@@ -5,7 +5,6 @@ import { Pagination, Stack } from "@mui/material";
 import SneakersList from "../components/SneakersList";
 
 function SneakersPage() {
-  const navigate = useNavigate();
   const [sneakers, setSneakers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;

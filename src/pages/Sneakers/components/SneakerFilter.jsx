@@ -5,9 +5,18 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import SortBy from "./SortBy";
+import { useLocation, useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 function SneakerFilter() {
   const [brands, setBrands] = useState([]);
+  const [brandOption, setBrandOption] = useState("");
+  const [priceOption, setPriceOtpion] = useState("");
+  const [sizeOption, setSizeOption] = useState("");
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const navigate = useNavigate();
 
   // Initialize sizes
   const sizes = [];
@@ -21,26 +30,26 @@ function SneakerFilter() {
     {
       id: "p1",
       text: "Dưới 500.000đ",
-      min: "0",
-      max: "500000",
+      min: 0,
+      max: 500000,
     },
     {
       id: "p2",
       text: "Từ 500.000đ - 1.000.000đ",
-      min: "500000",
-      max: "1000000",
+      min: 500000,
+      max: 1000000,
     },
     {
       id: "p3",
-      text: "Từ 1.000.000đ - 5.000.000đ",
-      min: "1000000",
-      max: "5000000",
+      text: "Từ 1.000.000đ - 3.000.000đ",
+      min: 1000000,
+      max: 3000000,
     },
     {
       id: "p4",
-      text: "Trên 5.000.000đ",
-      min: "5000000",
-      max: "10000000",
+      text: "Trên 3.000.000đ",
+      min: 3000000,
+      max: 10000000,
     },
   ];
 
@@ -52,20 +61,42 @@ function SneakerFilter() {
     // add catch
   }, []);
 
+  const brandChangeHandler = (event) => {
+    setBrandOption(event.target.value);
+    searchParams.set('brand', event.target.value)
+    navigate('?' + searchParams.toString())
+  };
+
+  const priceChangeHandler = (event) => {
+    setPriceOtpion(event.target.value);
+    const [min, max] = event.target.value.split('-')
+    searchParams.set("price", max);
+    navigate("?" + searchParams.toString());
+  };
+
+  const sizeChangeHandler = (event) => {
+    setSizeOption(event.target.value);
+    searchParams.set("size", event.target.value);
+    navigate("?" + searchParams.toString());
+  };
+
   return (
     <Stack width={230} sx={{ flexShrink: 0 }} padding={3}>
+      <SortBy searchParams={ searchParams } />
       <Stack>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">Brands</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="Adidas"
-            name="radio-buttons-group"
+            name="brands"
+            onChange={brandChangeHandler}
+            value={brandOption}
           >
             {brands.map((brand) => (
               <FormControlLabel
                 key={brand.id}
-                value={brand.name}
+                value={brand.slug}
                 control={<Radio />}
                 label={brand.name}
               />
@@ -79,12 +110,14 @@ function SneakerFilter() {
           <FormLabel id="demo-radio-buttons-group-label">Prices</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
-            name="radio-buttons-group"
+            name="prices"
+            onChange={priceChangeHandler}
+            value={priceOption}
           >
             {prices.map((price) => (
               <FormControlLabel
                 key={price.id}
-                value={price.min + "-" + price.max}
+                value={price.min + '-' + price.max}
                 control={<Radio />}
                 label={price.text}
               />
@@ -99,10 +132,12 @@ function SneakerFilter() {
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="Adidas"
-            name="radio-buttons-group"
+            name="sizes"
             sx={{
               height: "500px",
             }}
+            onChange={sizeChangeHandler}
+            value={sizeOption}
           >
             {sizes.map((size) => (
               <FormControlLabel
