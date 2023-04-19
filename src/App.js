@@ -4,7 +4,8 @@ import Layout from './components/layout';
 import { Provider, useDispatch } from 'react-redux';
 import store from './store/store';
 import { useEffect } from 'react';
-import SneakersPage from './pages/Sneakers/screens/Sneakers';
+import SneakersPage, { sneakersLoader } from './pages/Sneakers/screens/Sneakers';
+import SneakerDetail, { sneakerLoader } from './pages/Sneakers/screens/SneakerDetail';
 
 const route = createBrowserRouter([
   {
@@ -16,12 +17,18 @@ const route = createBrowserRouter([
         children: [
           {
             index: true,
+            loader: sneakersLoader,
             element: <SneakersPage/>
           },
           {
             path: 'add',
             element: <AddSneakerPage/>
-          }
+          },
+          {
+            path: ':slug',
+            loader: sneakerLoader,
+            element: <SneakerDetail/>
+          },
         ]
       },
       {

@@ -49,7 +49,7 @@ function AddSneakerPage() {
         categoryFormdata.append("categoryId", snkCate.categoryId);
         categoryFormdata.append("size", snkCate.size);
         categoryFormdata.append("price", snkCate.price);
-        categoryFormdata.append("sneaker", newSneaker.id);
+        categoryFormdata.append("sneaker", newSneaker._id);
 
         const categoryResponse = await fetch(
           "http://localhost:3000/api/sneakers/categories",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { json, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import SneakerFilter from "../components/SneakerFilter";
 import { Pagination, Stack } from "@mui/material";
 import SneakersList from "../components/SneakersList";
@@ -9,11 +9,11 @@ function SneakersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
+  const sneakersFetched = useLoaderData();
+  
   const fetchSneakers = () => {
-    fetch("http://localhost:3000/api/sneakers")
-      .then((res) => res.json())
-      .then((data) => setSneakers(data.data));
-  };
+    setSneakers(sneakersFetched)
+  }
 
   useEffect(() => {
     fetchSneakers();
@@ -23,6 +23,7 @@ function SneakersPage() {
     setCurrentPage(value);
   };
 
+  const pagesCount = Math.floor(sneakers.length / itemsPerPage) + 1;
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
   const currentSneakers = sneakers.slice(firstItemIndex, lastItemIndex);
@@ -33,11 +34,25 @@ function SneakersPage() {
       <Stack spacing={4} padding={5} justifyContent="center">
         <SneakersList currentSneakers={currentSneakers} />
         <Stack alignItems="center">
-          <Pagination count={10} shape="rounded" onChange={paginationHandler} />
+          <Pagination
+            count={pagesCount}
+            shape="rounded"
+            onChange={paginationHandler}
+          />
         </Stack>
       </Stack>
     </Stack>
   );
 }
+
+export const sneakersLoader = async () => {
+  const sneakers = fetch("http://localhost:3000/api/sneakers")
+    .then((res) => res.json())
+    .then((data) => data.data)
+    .catch((err) => {
+      throw json({ message: "Could not fetch sneakers!" }, { status: 500 });
+    });
+  return sneakers
+};
 
 export default SneakersPage;

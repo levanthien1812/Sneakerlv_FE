@@ -4,8 +4,10 @@ import { CardMedia } from "@mui/material";
 import { CardContent } from "@mui/material";
 import { Card } from "@mui/material";
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router";
 
 function SneakersList({ currentSneakers }) {
+  const navigate = useNavigate();
   return (
     <Grid container spacing={4}>
       {currentSneakers.map((snk) => {
