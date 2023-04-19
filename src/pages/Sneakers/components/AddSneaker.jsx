@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import BrandSelect from "./BrandSelect";
 
@@ -8,7 +8,9 @@ function AddSneaker(props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [brand, setBrand] = useState("");
-  const [coverImage, setCoverImage] = useState();
+  const [coverImage, setCoverImage] = useState("");
+  const [images, setImages] = useState([]);
+  const [isReset, setIsReset] = useState(false);
 
   const idChangeHandler = (event) => {
     setId(event.target.value);
@@ -26,6 +28,11 @@ function AddSneaker(props) {
     setCoverImage(event.target.files[0]);
   };
 
+  const changeImagesHandler = (event) => {
+    const images = Array.from(event.target.files);
+    setImages(images);
+  };
+
   const moveToNextHandler = () => {
     const newSneaker = {
       id,
@@ -33,9 +40,19 @@ function AddSneaker(props) {
       description,
       brand,
       coverImage,
+      images,
     };
     props.onMoveToNext(newSneaker);
   };
+
+  // if (props.isReset) {
+  //   setBrand("");
+  //   setCoverImage("");
+  //   setDescription("");
+  //   setId("");
+  //   setImages([]);
+  //   setName("");
+  // }
 
   return (
     <div>
@@ -70,6 +87,19 @@ function AddSneaker(props) {
             id="coverImage"
             name="coverImage"
             onChange={changeImageHandler}
+          ></TextField>
+        </div>
+        <div>
+          <label htmlFor="images">Sneaker cover image: </label>
+          <TextField
+            size="small"
+            type="file"
+            id="images"
+            name="images"
+            inputProps={{
+              multiple: true,
+            }}
+            onChange={changeImagesHandler}
           ></TextField>
         </div>
         <div>
