@@ -7,6 +7,7 @@ function AddSneakerPage() {
   // manage fields states
   const [newSneaker, setNewSneaker] = useState({});
   const [newSneakerCategories, setNewSneakerCategories] = useState([]);
+  const [isReset, setIsReset] = useState(false);
 
   const saveSneakerHandler = (snk) => {
     setNewSneaker(snk);
@@ -22,6 +23,9 @@ function AddSneakerPage() {
     sneakerFormdata.append("brand", newSneaker.brand);
     sneakerFormdata.append("description", newSneaker.description);
     sneakerFormdata.append("coverImage", newSneaker.coverImage);
+    newSneaker.images.forEach((image) => {
+      sneakerFormdata.append("images", image);
+    });
 
     const sneakerResponse = await fetch("http://localhost:3000/api/sneakers", {
       method: "post",
@@ -36,7 +40,7 @@ function AddSneakerPage() {
 
     if (newSneakerCategories.length === 0) return;
     await Promise.all(
-      newSneakerCategories.forEach(async (snkCate) => {
+      newSneakerCategories.map(async (snkCate) => {
         const categoryFormdata = new FormData();
 
         categoryFormdata.append("image", snkCate.image);
@@ -71,6 +75,14 @@ function AddSneakerPage() {
         <Button variant="contained" onClick={saveHandler}>
           Lưu
         </Button>
+        {/* <Button
+          sx={{ marginLeft: "10px" }}
+          variant="contained"
+          color="error"
+          onClick={() => setIsReset(true)}
+        >
+          Reset
+        </Button> */}
       </div>
     </>
   );

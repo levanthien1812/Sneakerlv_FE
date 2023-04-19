@@ -4,23 +4,9 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 function BrandSelect({ brand, setBrand }) {
   const [brands, setBrands] = useState([]);
   useEffect(() => {
-    const fetchBrands = async () => {
-      const response = await fetch("http://localhost:3000/api/brands");
-
-      if (!response.ok) {
-        throw new Error("Fail to fetch brands!");
-      }
-
-      return await response.json();
-    };
-
-    fetchBrands()
-      .then((data) => {
-        setBrands(data.data);
-      })
-      .catch((e) => {
-        throw e;
-      });
+    fetch("http://localhost:3000/api/brands")
+      .then((res) => res.json())
+      .then((data) => setBrands(data.data));
   }, []);
 
   const changeHandler = (event) => {
