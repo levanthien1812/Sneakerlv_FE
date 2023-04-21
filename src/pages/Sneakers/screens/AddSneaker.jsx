@@ -38,6 +38,9 @@ function AddSneakerPage() {
       console.log("Success!");
     }
 
+    const newSneakerJson = await sneakerResponse.json();
+    const newSneakerData = newSneakerJson.data;
+
     if (newSneakerCategories.length === 0) return;
     await Promise.all(
       newSneakerCategories.map(async (snkCate) => {
@@ -49,7 +52,7 @@ function AddSneakerPage() {
         categoryFormdata.append("categoryId", snkCate.categoryId);
         categoryFormdata.append("size", snkCate.size);
         categoryFormdata.append("price", snkCate.price);
-        categoryFormdata.append("sneaker", newSneaker._id);
+        categoryFormdata.append("sneakerId", newSneakerData._id);
 
         const categoryResponse = await fetch(
           "http://localhost:3000/api/sneakers/categories",

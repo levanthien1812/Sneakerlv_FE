@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { json, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import { json, useLoaderData } from "react-router-dom";
 import SneakerFilter from "../components/SneakerFilter";
 import { Pagination, Stack } from "@mui/material";
 import SneakersList from "../components/SneakersList";
@@ -31,7 +31,7 @@ function SneakersPage() {
   return (
     <Stack direction="row" spacing={2}>
       <SneakerFilter />
-      <Stack spacing={4} padding={5} justifyContent="center">
+      <Stack spacing={4} padding={5} flexGrow={1}>
         <SneakersList currentSneakers={currentSneakers} />
         <Stack alignItems="center">
           <Pagination

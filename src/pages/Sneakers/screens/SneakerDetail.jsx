@@ -1,76 +1,266 @@
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
-import { json, useActionData, useLoaderData } from "react-router";
+import { Add, Remove, ShoppingBag, ShoppingCart } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  Tab,
+  Tabs,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { json, useLoaderData } from "react-router";
+import { currencyFormatter } from "../../../utils/formatters";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Swiper from "swiper";
+import ImagesSwiper from "../components/SneakerImagesSwiper";
+import RelatedSneakers from "../components/RelatedSneakers";
 
 function SneakerDetail() {
   const { sneaker, categories, related } = useLoaderData();
+
+  const imageLists = [sneaker.coverImage, ...sneaker.images].map((img) => {
+    return `http://localhost:3000/images/sneakers/${sneaker.id}/${img}`;
+  });
+
+  const [categoryChosen, setCategoryChosen] = useState(categories[0]);
+  const [quantityChosen, setQuantityChosen] = useState(1);
+  const [quantityInStock, setQuantityInStock] = useState(
+    categoryChosen.quantity
+  );
+
+  const [tab, setTab] = React.useState("description");
+
+  const handleTabChange = (event, value) => {
+    setTab(value);
+  };
+
+  const sizeChangeHandler = (event, categoryId) => {
+    const category = categories.find((cate) => cate._id === categoryId);
+    setCategoryChosen(category);
+    setQuantityInStock(category.quantity);
+  };
+
+  const quantityBtnsStyle = {
+    paddingX: "8px",
+    paddingY: "3px",
+    borderRadius: "0",
+    borderColor: "black",
+    color: "black",
+    fontSize: "16px",
+    "&:hover": {
+      borderColor: "black",
+    },
+  };
+
+  const buyBtnStyle = {
+    paddingX: "24px",
+    paddingY: "3px",
+    fontSize: "16px",
+    borderRadius: "0",
+    color: "black",
+    border: "1px solid black",
+    backgroundColor: "#ddd",
+  };
+
+  const incrementQuantityHandler = () => {
+    setQuantityChosen((prevState) => prevState + 1);
+  };
+
+  const decrementQuantityHandler = () => {
+    setQuantityChosen((prevState) => {
+      if (prevState === 1) return 1;
+      return prevState - 1;
+    });
+  };
+
   return (
     <Stack padding={3}>
-      <Grid container>
+      {/* sneaker's information */}
+      <Grid container marginBottom={4}>
+        {/* sneaker's images */}
         <Grid item xs={7}>
-          <Stack>
-            <Stack
-              height={500}
-              overflow="hidden"
-              marginBottom={2}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <img
-                style={{ width: "100%" }}
-                src={`http://localhost:3000/images/sneakers/${sneaker.id}/${sneaker.coverImage}`}
-              ></img>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={1}
-              sx={{
-                overflowX: "scroll",
-              }}
-            >
-              {/* <IconButton>
-                <ChevronLeft />
-              </IconButton> */}
-              {sneaker.images.map((img) => (
-                <Stack
-                  sx={{ minWidth: "25%", maxWidth: "33.33%" }}
-                  height={160}
-                  overflow="hidden"
-                  justifyContent="center"
-                  alignItems="center"
-                  flexShrink={0}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={`http://localhost:3000/images/sneakers/${sneaker.id}/${img}`}
-                  ></img>
-                </Stack>
-              ))}
-              {/* <IconButton>
-                <ChevronRight />
-              </IconButton> */}
-            </Stack>
-          </Stack>
+          <ImagesSwiper images={imageLists} />
         </Grid>
+        {/* sneaker's statistics */}
         <Grid item xs={5}>
           <Stack paddingX={4} paddingTop={2}>
+            {/* sneaker's name and price */}
             <Typography variant="p" fontSize={30} marginBottom={2}>
               {sneaker.brand.name}
             </Typography>
             <Typography
               variant="h2"
               fontSize={36}
-              marginBottom={3}
+              marginBottom={1}
               fontWeight={600}
             >
               {sneaker.name}
             </Typography>
+            <Typography
+              textTransform="uppercase"
+              marginBottom={2}
+              fontSize={20}
+            >
+              {currencyFormatter.format(categoryChosen.price)}
+            </Typography>
+            <Divider sx={{ marginBottom: "24px" }} />
+            {/* sneaker's id */}
+            <Typography
+              textTransform="uppercase"
+              marginBottom={2}
+            >{`Mã sản phẩm: ${sneaker.id}`}</Typography>
+            {/* sneaker's sizes */}
+            <Typography variant="p" marginBottom={1} textTransform="uppercase">
+              Kích thước:
+            </Typography>
+            <ToggleButtonGroup
+              value={categoryChosen._id}
+              exclusive
+              onChange={sizeChangeHandler}
+              aria-label="text alignment"
+              sx={{
+                marginBottom: "16px",
+              }}
+            >
+              {categories.map((cate) => (
+                <ToggleButton
+                  sx={{
+                    paddingX: "24px",
+                    paddingY: "3px",
+                    fontSize: "16px",
+                    borderRadius: "0",
+                    color: "black",
+                    borderColor: "black",
+                  }}
+                  key={cate._id}
+                  value={cate._id}
+                  aria-label="left aligned"
+                >
+                  {cate.size}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+            {/* choose quantity */}
+            <Stack direction="row" spacing={5} marginBottom={3}>
+              <Stack>
+                <Typography
+                  variant="p"
+                  marginBottom={1}
+                  textTransform="uppercase"
+                >
+                  Số lượng:
+                </Typography>
+                <ButtonGroup variant="outlined">
+                  <Button
+                    sx={{ ...quantityBtnsStyle, borderRightWidth: "0" }}
+                    onClick={decrementQuantityHandler}
+                  >
+                    -
+                  </Button>
+                  <Button
+                    sx={{
+                      ...quantityBtnsStyle,
+                      borderRightWidth: "0",
+                      borderLeftWidth: "0",
+                    }}
+                  >
+                    {quantityChosen}
+                  </Button>
+                  <Button
+                    sx={{ ...quantityBtnsStyle, borderLeftWidth: "0" }}
+                    onClick={incrementQuantityHandler}
+                  >
+                    +
+                  </Button>
+                </ButtonGroup>
+              </Stack>
+              <Stack>
+                <Typography
+                  variant="p"
+                  marginBottom={1}
+                  textTransform="uppercase"
+                >
+                  Trong kho:
+                </Typography>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    paddingX: "24px",
+                    paddingY: "3px",
+                    fontSize: "16px",
+                    borderRadius: "0",
+                    color: "black",
+                    borderColor: "black",
+                    "&:hover": {
+                      borderColor: "black",
+                    },
+                    cursor: "default",
+                  }}
+                >
+                  {quantityInStock}
+                </Button>
+              </Stack>
+            </Stack>
+            {/* add to cart & buy button */}
+            <Stack direction="row" marginBottom={3} spacing={2}>
+              <IconButton sx={buyBtnStyle}>
+                <ShoppingCart />
+              </IconButton>
+              <Button
+                variant="outlined"
+                sx={{
+                  ...buyBtnStyle,
+                  flexGrow: "1",
+                  "&:hover": {
+                    borderColor: "black",
+                    backgroundColor: "#EC9F12",
+                    color: "white",
+                  },
+                }}
+              >
+                MUA NGAY
+              </Button>
+            </Stack>
+            <Divider />
+            {/* description & reviews */}
+            <Box sx={{ width: "100%", typography: "body1" }}>
+              <TabContext value={tab}>
+                <Box>
+                  <TabList
+                    onChange={handleTabChange}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab
+                      label="Mô tả"
+                      value="description"
+                      sx={{ flexGrow: "1" }}
+                    />
+                    <Tab
+                      label="Đánh giá"
+                      value="reviews"
+                      sx={{ flexGrow: "1" }}
+                    />
+                  </TabList>
+                </Box>
+                <TabPanel value="description">
+                  {sneaker.description.length === 0
+                    ? "No description available"
+                    : sneaker.description}
+                </TabPanel>
+                <TabPanel value="reviews">Chưa có đánh giá nào</TabPanel>
+              </TabContext>
+            </Box>
           </Stack>
         </Grid>
       </Grid>
-      <Stack></Stack>
+      {/* related items */}
+      <RelatedSneakers sneakers={related} />
     </Stack>
   );
 }
