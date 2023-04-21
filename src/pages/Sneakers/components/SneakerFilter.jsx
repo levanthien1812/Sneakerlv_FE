@@ -95,7 +95,7 @@ function SneakerFilter() {
           >
             {brands.map((brand) => (
               <FormControlLabel
-                key={brand.id}
+                key={brand._id}
                 value={brand.slug}
                 control={<Radio />}
                 label={brand.name}

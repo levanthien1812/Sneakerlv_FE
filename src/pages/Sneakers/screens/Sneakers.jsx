@@ -31,7 +31,7 @@ function SneakersPage() {
   return (
     <Stack direction="row" spacing={2}>
       <SneakerFilter />
-      <Stack spacing={4} padding={5} justifyContent="center">
+      <Stack spacing={4} padding={5} flexGrow={1}>
         <SneakersList currentSneakers={currentSneakers} />
         <Stack alignItems="center">
           <Pagination
