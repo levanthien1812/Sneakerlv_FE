@@ -14,14 +14,21 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { json, useLoaderData } from "react-router";
+import { json, useLoaderData, useNavigate } from "react-router";
 import { currencyFormatter } from "../../../utils/formatters";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Swiper from "swiper";
 import ImagesSwiper from "../components/SneakerImagesSwiper";
 import RelatedSneakers from "../components/RelatedSneakers";
+import { useDispatch, useSelector } from "react-redux";
+import { actions as UIActions } from "../../../store/ui";
+import { actions as authActions } from "../../../store/auth";
+import MyAlert from "../../../components/UI/Alert";
+import { isAuthenticated } from "../../../utils/auth";
 
 function SneakerDetail() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isNotifShown } = useSelector((state) => state.ui);
   const { sneaker, categories, related } = useLoaderData();
 
   const imageLists = [sneaker.coverImage, ...sneaker.images].map((img) => {
@@ -78,6 +85,64 @@ function SneakerDetail() {
       return prevState - 1;
     });
   };
+
+  const addToCartHandler = async () => {
+    if (!isAuthenticated()) {
+      dispatch(
+        UIActions.showNotification({
+          title: "Remind!",
+          message: "You are not logged in! Please log in.",
+          type: "warning",
+        })
+      );
+      setTimeout(() => {
+        dispatch(UIActions.hideNotification());
+        return dispatch(authActions.setIsLoggingIn(true));
+      }, 2500);
+    } else {
+      const response = await fetch(
+        "http://localhost:3000/api/sneakers/" + sneaker.slug,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sneaker: sneaker._id,
+            category: categoryChosen._id,
+            quantity: quantityChosen,
+          }),
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        dispatch(
+          UIActions.showNotification({
+            title: "Fail!",
+            message: "Can not add this item to cart!",
+            type: "error",
+            duration: 2500
+          })
+        );
+      } else {
+        dispatch(
+          UIActions.showNotification({
+            title: "Success!",
+            message: "Added to cart successfully!",
+            type: "success",
+            duration: 2500
+          })
+        );
+      }
+      setTimeout(() => {
+        dispatch(UIActions.hideNotification());
+      }, 2500);
+    }
+  };
+
+  const orderHandler = () => {};
 
   return (
     <Stack padding={3}>
@@ -209,10 +274,11 @@ function SneakerDetail() {
             </Stack>
             {/* add to cart & buy button */}
             <Stack direction="row" marginBottom={3} spacing={2}>
-              <IconButton sx={buyBtnStyle}>
+              <IconButton sx={buyBtnStyle} onClick={addToCartHandler}>
                 <ShoppingCart />
               </IconButton>
               <Button
+                onClick={orderHandler}
                 variant="outlined"
                 sx={{
                   ...buyBtnStyle,
@@ -261,6 +327,7 @@ function SneakerDetail() {
       </Grid>
       {/* related items */}
       <RelatedSneakers sneakers={related} />
+      {isNotifShown && <MyAlert />}
     </Stack>
   );
 }

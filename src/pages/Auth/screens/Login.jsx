@@ -50,6 +50,7 @@ function LoginModal() {
         setPassword("");
       } else {
         setToken(data.token);
+        localStorage.setItem("user", JSON.stringify(data.data.user));
         dispatch(authActions.setAuth());
         dispatch(authActions.setIsLoggingIn(false));
       }
@@ -64,10 +65,10 @@ function LoginModal() {
     event.preventDefault();
   };
 
-    const convertToSignupHandler = () => {
-      dispatch(authActions.setIsLoggingIn(false));
-      dispatch(authActions.setIsSigningUp(true));
-    };
+  const convertToSignupHandler = () => {
+    dispatch(authActions.setIsLoggingIn(false));
+    dispatch(authActions.setIsSigningUp(true));
+  };
 
   return (
     <Modal
