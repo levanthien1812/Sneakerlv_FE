@@ -28,11 +28,13 @@ function SignupModal() {
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const isNotifShown = useSelector((state) => state.ui.isNotifShown);
 
-  const [notification, setNotification] = useState({
-    title: "Success",
-    message: "Sign up successfully! Please login to access.",
-    type: "success",
-  });
+  dispatch(
+    UIActions.showNotification({
+      title: "Success",
+      message: "Sign up successfully! Please login to access.",
+      type: "success",
+    })
+  );
 
   const signUpHandler = async (event) => {
     event.preventDefault();
@@ -54,17 +56,17 @@ function SignupModal() {
       const data = await response.json();
 
       if (data.status === "fail") {
-        setNotification({
-          title: "Error!",
-          type: "error",
-          message: data.message,
-        });
-        dispatch(UIActions.showNotification());
+        dispatch(
+          UIActions.showNotification({
+            title: "Error!",
+            type: "error",
+            message: data.message,
+          })
+        );
         setEmail("");
         setPassword("");
       } else {
-        dispatch(UIActions.showNotification());
-        dispatch(UIActions.showNotification());
+        dispatch(UIActions.hideNotification())
         setTimeout(() => {
           dispatch(authActions.signup());
         }, 3000);
@@ -109,7 +111,7 @@ function SignupModal() {
 
   return (
     <>
-      {isNotifShown && <MyAlert notif={notification} />}
+      {isNotifShown && <MyAlert/>}
       <Modal
         onCloseModal={dispatch.bind(this, authActions.setIsSigningUp(false))}
       >
