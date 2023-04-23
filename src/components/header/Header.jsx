@@ -1,12 +1,13 @@
 import React from "react";
 import AuthBtns from "./AuthBtns";
 import { NavLink } from "react-router-dom";
-import logo from "../../assets/images/sneakerlv.png"
-import classes from './Header.module.css'
+import logo from "../../assets/images/sneakerlv.png";
+import classes from "./Header.module.css";
 import UserCartBtns from "./UserCartBtns";
-import { isAuthenticated } from "../../utils/auth";
+import { useSelector } from "react-redux";
 
 function Header() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
     <div className={classes.header}>
       <nav className={classes["left-nav"]}>
@@ -43,8 +44,8 @@ function Header() {
             <NavLink>Location</NavLink>
           </li>
         </ul>
-        {!isAuthenticated() && <AuthBtns />}
-        {isAuthenticated() && <UserCartBtns/>}
+        {!isAuthenticated && <AuthBtns />}
+        {isAuthenticated && <UserCartBtns />}
       </nav>
     </div>
   );

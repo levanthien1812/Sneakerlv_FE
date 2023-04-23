@@ -30,7 +30,7 @@ export function LoginGoogle() {
             const data = await response.json();
             setToken(data.token);
             localStorage.setItem('user', JSON.stringify(data.data.user))
-            dispatch(authActions.setAuth())
+            dispatch(authActions.setAuthen())
             dispatch(authActions.setIsLoggingIn(false));
         } catch (e) {
             console.log(e.message);

@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAuthToken, isAuthened, logout } from "../utils/auth";
+import { getAuthToken, isAuthened, isAuthenticated, logout } from "../utils/auth";
 
 const initialAuthState = {
     isSignedUp: false,
     isLoggingIn: false,
     isSigningUp: false,
+    isAuthenticated: isAuthenticated(),
 }
 
 const authSlice = createSlice({
@@ -20,6 +21,9 @@ const authSlice = createSlice({
         signup(state) {
             state.isSigningUp = false
             state.isLoggingIn = true
+        },
+        setAuthen(state) {
+            state.isAuthenticated = isAuthenticated()
         },
         logout(state) {
             logout()
