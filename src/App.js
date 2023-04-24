@@ -6,6 +6,7 @@ import store from './store/store';
 import { useEffect } from 'react';
 import SneakersPage, { sneakersLoader } from './pages/Sneakers/screens/Sneakers';
 import SneakerDetail, { sneakerLoader } from './pages/Sneakers/screens/SneakerDetail';
+import Cart, { cartLoader } from './pages/Cart/screens/Cart';
 
 const route = createBrowserRouter([
   {
@@ -32,7 +33,9 @@ const route = createBrowserRouter([
         ]
       },
       {
-        path: 'login'
+        path: 'cart',
+        element: <Cart />,
+        loader: cartLoader,
       }
     ]
   }
