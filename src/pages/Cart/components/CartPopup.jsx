@@ -1,8 +1,9 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CartItemCard from "./CartItemCard";
+import { Link } from "react-router-dom";
 
-function CartPopup() {
+function CartPopup({ onGoToCartClick }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -20,11 +21,26 @@ function CartPopup() {
   }, []);
 
   return (
-    <Stack p={2}>
-      {items.map((item) => (
-        <CartItemCard item={item} />
-      ))}
-    </Stack>
+    <Box
+      position="absolute"
+      top={60}
+      right={0}
+      padding={0}
+      bgcolor="white"
+      zIndex={10}
+      boxShadow={1}
+    >
+      <Stack p={2} spacing={1}>
+        {items.map((item) => (
+          <CartItemCard item={item} />
+        ))}
+        <Button variant="contained" color="secondary" onClick={onGoToCartClick}>
+          <Link to="/cart" style={{ color: "white" }}>
+            Go to cart
+          </Link>
+        </Button>
+      </Stack>
+    </Box>
   );
 }
 
