@@ -3,11 +3,13 @@ import {
 } from "@reduxjs/toolkit";
 import authReducer from "./auth"
 import uiReducer from "./ui"
+import cartReducer from "./cart"
 
 const store = configureStore({
     reducer: {
         auth: authReducer,
-        ui: uiReducer
+        ui: uiReducer,
+        cart: cartReducer
     }
 })
 
