@@ -22,11 +22,12 @@ import RelatedSneakers from "../components/RelatedSneakers";
 import { useDispatch, useSelector } from "react-redux";
 import { actions as UIActions } from "../../../store/ui";
 import { actions as authActions } from "../../../store/auth";
+import { actions as cartAction } from "../../../store/cart";
 import MyAlert from "../../../components/UI/Alert";
 import { isAuthenticated } from "../../../utils/auth";
+import IncreDecre from "../../../components/UI/IncreDecre";
 
 function SneakerDetail() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isNotifShown } = useSelector((state) => state.ui);
   const { sneaker, categories, related } = useLoaderData();
@@ -51,18 +52,6 @@ function SneakerDetail() {
     const category = categories.find((cate) => cate._id === categoryId);
     setCategoryChosen(category);
     setQuantityInStock(category.quantity);
-  };
-
-  const quantityBtnsStyle = {
-    paddingX: "8px",
-    paddingY: "3px",
-    borderRadius: "0",
-    borderColor: "black",
-    color: "black",
-    fontSize: "16px",
-    "&:hover": {
-      borderColor: "black",
-    },
   };
 
   const buyBtnStyle = {
@@ -123,7 +112,7 @@ function SneakerDetail() {
             title: "Fail!",
             message: "Can not add this item to cart!",
             type: "error",
-            duration: 2500
+            duration: 2500,
           })
         );
       } else {
@@ -132,7 +121,7 @@ function SneakerDetail() {
             title: "Success!",
             message: "Added to cart successfully!",
             type: "success",
-            duration: 2500
+            duration: 2500,
           })
         );
       }
@@ -221,29 +210,11 @@ function SneakerDetail() {
                 >
                   Số lượng:
                 </Typography>
-                <ButtonGroup variant="outlined">
-                  <Button
-                    sx={{ ...quantityBtnsStyle, borderRightWidth: "0" }}
-                    onClick={decrementQuantityHandler}
-                  >
-                    -
-                  </Button>
-                  <Button
-                    sx={{
-                      ...quantityBtnsStyle,
-                      borderRightWidth: "0",
-                      borderLeftWidth: "0",
-                    }}
-                  >
-                    {quantityChosen}
-                  </Button>
-                  <Button
-                    sx={{ ...quantityBtnsStyle, borderLeftWidth: "0" }}
-                    onClick={incrementQuantityHandler}
-                  >
-                    +
-                  </Button>
-                </ButtonGroup>
+                <IncreDecre
+                  quantity={quantityChosen}
+                  increment={incrementQuantityHandler}
+                  decrement={decrementQuantityHandler}
+                />
               </Stack>
               <Stack>
                 <Typography
