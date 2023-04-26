@@ -2,9 +2,12 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CartItemCard from "./CartItemCard";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { actions as cartActions } from "../../../store/cart";
 
-function CartPopup({ onGoToCartClick }) {
+function CartPopup() {
   const [items, setItems] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchCart() {
@@ -34,7 +37,13 @@ function CartPopup({ onGoToCartClick }) {
         {items.map((item) => (
           <CartItemCard item={item} />
         ))}
-        <Button variant="contained" color="secondary" onClick={onGoToCartClick}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            dispatch(cartActions.hideCartPopup());
+          }}
+        >
           <Link to="/cart" style={{ color: "white" }}>
             Go to cart
           </Link>

@@ -3,23 +3,27 @@ import { AccountCircle, ShoppingCart } from "@mui/icons-material";
 import { Stack } from "@mui/system";
 import { IconButton, Badge } from "@mui/material";
 import CartPopup from "../../pages/Cart/components/CartPopup";
+import { useDispatch, useSelector } from "react-redux";
+import { actions as cartActions } from "../../store/cart";
 
 function UserCartBtns() {
-  const [cartShown, setCartShow] = useState(false);
+  const dispatch = useDispatch();
+  const { isCartPopupShow, quantity } = useSelector((state) => state.cart);
+
   const showCartPopupHandler = (event) => {
-    setCartShow(!cartShown);
+    isCartPopupShow
+      ? dispatch(cartActions.hideCartPopup())
+      : dispatch(cartActions.showCartPopup());
   };
 
   return (
     <Stack direction="row">
       <IconButton aria-label="cart" onClick={showCartPopupHandler}>
-        <Badge badgeContent={4} color="secondary">
+        <Badge badgeContent={quantity} color="secondary">
           <ShoppingCart fontSize="large" />
         </Badge>
       </IconButton>
-      {cartShown && (
-        <CartPopup onGoToCartClick={showCartPopupHandler}/>
-      )}
+      {isCartPopupShow && <CartPopup />}
       <IconButton aria-label="delete">
         <AccountCircle fontSize="large" />
       </IconButton>
