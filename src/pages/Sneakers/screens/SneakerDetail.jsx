@@ -26,6 +26,7 @@ import { actions as cartAction } from "../../../store/cart";
 import MyAlert from "../../../components/UI/Alert";
 import { isAuthenticated } from "../../../utils/auth";
 import IncreDecre from "../../../components/UI/IncreDecre";
+import mongoose from "mongoose"
 
 function SneakerDetail() {
   const dispatch = useDispatch();
@@ -89,42 +90,21 @@ function SneakerDetail() {
         return dispatch(authActions.setIsLoggingIn(true));
       }, 2500);
     } else {
-      const response = await fetch(
-        "http://localhost:3000/api/sneakers/" + sneaker.slug,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            sneaker: sneaker._id,
-            category: categoryChosen._id,
-            quantity: quantityChosen,
-          }),
-          withCredentials: true,
-          credentials: "include",
-        }
-      );
+      const itemToAdd = {
+        sneaker,
+        category: categoryChosen,
+        quantity: quantityChosen,
+      };
+      dispatch(cartAction.addToCart(itemToAdd));
 
-      if (!response.ok) {
-        dispatch(
-          UIActions.showNotification({
-            title: "Fail!",
-            message: "Can not add this item to cart!",
-            type: "error",
-            duration: 2500,
-          })
-        );
-      } else {
-        dispatch(
-          UIActions.showNotification({
-            title: "Success!",
-            message: "Added to cart successfully!",
-            type: "success",
-            duration: 2500,
-          })
-        );
-      }
+      dispatch(
+        UIActions.showNotification({
+          title: "Success!",
+          message: "Added to cart successfully!",
+          type: "success",
+          duration: 2500,
+        })
+      );
       setTimeout(() => {
         dispatch(UIActions.hideNotification());
       }, 2500);
