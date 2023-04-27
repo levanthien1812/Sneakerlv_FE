@@ -18,6 +18,7 @@ const StyledRating = styled(Rating)({
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
+  const [isChosen, setIsChosen] = useState(false)
 
   const incrementQuantityHandler = () => {
     dispatch(cartActions.increQuantity(item._id));
@@ -27,8 +28,32 @@ function CartItem({ item }) {
     dispatch(cartActions.decreQuantity(item._id));
   };
 
+  const removeCartItemHandler = () => {
+    dispatch(cartActions.removeFromCart(item))
+  }
+
+  const chooseToBuyHandler = () => {
+    setIsChosen(!isChosen)
+  }
+
   return (
-    <Stack direction="row">
+    <Stack
+      direction="row"
+      bgcolor={isChosen ? "#00000011" : "#fff"}
+      sx={
+        isChosen
+          ? {
+              borderWidth: "3px",
+              borderColor: "#666",
+              borderStyle: "solid",
+            }
+          : {
+              border: "none"
+            }
+      }
+      padding={2}
+      borderRadius={3}
+    >
       <Stack
         width={200}
         height={120}
@@ -76,17 +101,25 @@ function CartItem({ item }) {
           </Stack>
         </Stack>
         <Stack alignItems="end">
-          <Button variant="text" sx={{ textTransform: "capitalize" }}>
+          <Button
+            variant="text"
+            sx={{ textTransform: "capitalize" }}
+            onClick={removeCartItemHandler}
+          >
             Remove
           </Button>
-          <Button variant="text" sx={{ textTransform: "capitalize" }}>
-            Choose to buy
+          <Button
+            variant="outlined"
+            sx={{ textTransform: "capitalize" }}
+            onClick={chooseToBuyHandler}
+          >
+            { !isChosen ? 'Choose to buy' : 'Unchoose'}
           </Button>
         </Stack>
       </Stack>
       <Stack alignItems="end" spacing={1}>
         <Typography variant="p" fontSize={19}>
-          {currencyFormatter.format(item.category.price)}
+          {currencyFormatter.format(item.category.price * item.quantity)}
         </Typography>
         <IncreDecre
           quantity={item.quantity}

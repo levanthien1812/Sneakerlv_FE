@@ -2,26 +2,14 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CartItemCard from "./CartItemCard";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actions as cartActions } from "../../../store/cart";
 
 function CartPopup() {
-  const [items, setItems] = useState([]);
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchCart() {
-      const response = await fetch(
-        "http://localhost:3000/api/carts/?quantity=3",
-        { withCredentials: true, credentials: "include" }
-      );
-
-      const data = await response.json();
-      setItems(data.data);
-    }
-
-    fetchCart();
-  }, []);
+  const remainingQuantity = cartItems.length - 3;
 
   return (
     <Box
@@ -34,9 +22,12 @@ function CartPopup() {
       boxShadow={1}
     >
       <Stack p={2} spacing={1}>
-        {items.map((item) => (
-          <CartItemCard item={item} />
+        {cartItems.slice(0, 3).map((item) => (
+          <CartItemCard key={item._id} item={item} />
         ))}
+        {remainingQuantity > 0 && (
+          <Typography variant="p">and 2 mores</Typography>
+        )}
         <Button
           variant="contained"
           color="secondary"

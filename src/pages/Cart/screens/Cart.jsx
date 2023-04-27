@@ -1,5 +1,5 @@
-import { Button, Stack, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { Button, Divider, Stack, Typography } from "@mui/material";
+import React, { Fragment, useEffect } from "react";
 import { json, useLoaderData } from "react-router";
 import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
@@ -23,9 +23,12 @@ export default function Cart() {
         {cartItems.length + " items in your cart"}
       </Typography>
       <Stack direction="row" spacing={8}>
-        <Stack spacing={2} marginTop={2}>
+        <Stack spacing={1} marginTop={2}>
           {cartItems.map((item) => (
-            <CartItem key={item._id} item={item} />
+            <Fragment key={item._id}>
+              <CartItem item={item} />
+              <Divider />
+            </Fragment>
           ))}
         </Stack>
         <Stack>

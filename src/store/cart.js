@@ -14,9 +14,35 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart(state, action) {
+            const itemToAdd = action.payload
+            const index = state.cartItems.findIndex(
+                item =>
+                item.sneaker._id === itemToAdd.sneaker._id &&
+                item.category._id === itemToAdd.category._id
+            )
+            if (index > -1) {
+                const cartItem = state.cartItems[index]
+                cartItem.quantity += itemToAdd.quantity
+                cartItem.price = cartItem.quantity * cartItem.category.price
+                state.cartItems[index] = cartItem
+            } else {
+                state.cartItems.push(itemToAdd)
+            }
+
+            state.quantity = state.cartItems.length
             // manipulate localStorage
         },
+
         removeFromCart(state, action) {
+            const itemToRemove = action.payload
+            const index = state.cartItems.findIndex(
+                item =>
+                item.sneaker._id === itemToRemove.sneaker._id &&
+                item.category._id === itemToRemove.category._id
+            )
+            state.cartItems.splice(index, 1)
+
+            state.quantity = state.cartItems.length
             // manipulate localStorage
         },
         showCartPopup(state) {
@@ -27,22 +53,23 @@ const cartSlice = createSlice({
         },
         increQuantity(state, action) {
             const id = action.payload
-            const cartItems = state.cartItems
-            const index = cartItems.findIndex(item => item._id === id)
-            cartItems[index].quantity++
-            cartItems[index].price = cartItems[index].quantity * cartItems[index].category.price
+            const index = state.cartItems.findIndex(item => item._id === id)
+            const cartItem = state.cartItems[index]
+            cartItem.quantity++
+            cartItem.price = cartItem.quantity * cartItem.category.price
 
-            state.cartItems = cartItems
-            console.log(cartItems)
+            state.cartItems[index] = cartItem
         },
-        
+
         decreQuantity(state, action) {
             const id = action.payload
             const index = state.cartItems.findIndex(item => item._id === id)
-            if (state.cartItems[index].quantity === 1) {
-                state.cartItems[index].quantity = 1
-            } else state.cartItems[index].quantity--
-            state.cartItems[index].price = state.cartItems[index].quantity * state.cartItems[index].category.price
+            const cartItem = state.cartItems[index]
+
+            if (cartItem.quantity === 1) {
+                cartItem.quantity = 1
+            } else cartItem.quantity--
+            cartItem.price = cartItem.quantity * cartItem.category.price
         },
         setCartItems(state, action) {
             state.cartItems = action.payload
