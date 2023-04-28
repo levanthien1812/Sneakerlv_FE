@@ -18,7 +18,7 @@ const StyledRating = styled(Rating)({
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
-  const [isChosen, setIsChosen] = useState(false)
+  const [isChosen, setIsChosen] = useState(false);
 
   const incrementQuantityHandler = () => {
     dispatch(cartActions.increQuantity(item._id));
@@ -29,12 +29,13 @@ function CartItem({ item }) {
   };
 
   const removeCartItemHandler = () => {
-    dispatch(cartActions.removeFromCart(item))
-  }
+    dispatch(cartActions.removeFromCart(item));
+  };
 
   const chooseToBuyHandler = () => {
-    setIsChosen(!isChosen)
-  }
+    setIsChosen(!isChosen);
+    dispatch(cartActions.setChosen({ id: item._id, isChosen: !isChosen }));
+  };
 
   return (
     <Stack
@@ -48,7 +49,7 @@ function CartItem({ item }) {
               borderStyle: "solid",
             }
           : {
-              border: "none"
+              border: "none",
             }
       }
       padding={2}
@@ -113,7 +114,7 @@ function CartItem({ item }) {
             sx={{ textTransform: "capitalize" }}
             onClick={chooseToBuyHandler}
           >
-            { !isChosen ? 'Choose to buy' : 'Unchoose'}
+            {!isChosen ? "Choose to buy" : "Unchoose"}
           </Button>
         </Stack>
       </Stack>

@@ -5,6 +5,8 @@ import jwt_decode from "jwt-decode";
 import { setToken } from "./auth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { actions as cartActions } from "../store/cart";
+import { fetchCartItems, setCartItemsToLS } from "./cart";
 
 export function LoginGoogle() {
     const dispatch = useDispatch()
@@ -32,6 +34,9 @@ export function LoginGoogle() {
             localStorage.setItem('user', JSON.stringify(data.data.user))
             dispatch(authActions.setAuthen())
             dispatch(authActions.setIsLoggingIn(false));
+            const cartItems = await fetchCartItems()
+            setCartItemsToLS(cartItems)
+            dispatch(cartActions.getCartItems(cartItems))
         } catch (e) {
             console.log(e.message);
         }
