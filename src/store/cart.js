@@ -1,12 +1,29 @@
 import {
     createSlice
 } from "@reduxjs/toolkit";
+import {
+    json
+} from "react-router";
+import {
+    getCartItemsFromLS, setCartItemsToLS
+} from "../utils/cart";
+
+const calculateTotalPrice = (cartItems) => {
+    let totalPrice = 0
+    cartItems.map(cartItem => {
+        if (cartItem.isChosen) {
+            totalPrice += cartItem.price
+        }
+    })
+
+    return totalPrice
+}
 
 const initialState = {
     isCartPopupShow: false,
-    cartItems: [],
+    cartItems: getCartItemsFromLS(),
     totalPrice: 0,
-    quantity: 0,
+    quantity: getCartItemsFromLS().length,
 }
 
 const cartSlice = createSlice({
@@ -30,7 +47,9 @@ const cartSlice = createSlice({
             }
 
             state.quantity = state.cartItems.length
+            state.totalPrice = calculateTotalPrice(state.cartItems)
             // manipulate localStorage
+            setCartItemsToLS(state.cartItems)
         },
 
         removeFromCart(state, action) {
@@ -43,7 +62,9 @@ const cartSlice = createSlice({
             state.cartItems.splice(index, 1)
 
             state.quantity = state.cartItems.length
+            state.totalPrice = calculateTotalPrice(state.cartItems)
             // manipulate localStorage
+            setCartItemsToLS(state.cartItems)
         },
         showCartPopup(state) {
             state.isCartPopupShow = true
@@ -58,7 +79,8 @@ const cartSlice = createSlice({
             cartItem.quantity++
             cartItem.price = cartItem.quantity * cartItem.category.price
 
-            state.cartItems[index] = cartItem
+            state.totalPrice = calculateTotalPrice(state.cartItems)
+            setCartItemsToLS(state.cartItems)
         },
 
         decreQuantity(state, action) {
@@ -70,11 +92,25 @@ const cartSlice = createSlice({
                 cartItem.quantity = 1
             } else cartItem.quantity--
             cartItem.price = cartItem.quantity * cartItem.category.price
+
+            state.totalPrice = calculateTotalPrice(state.cartItems)
+            setCartItemsToLS(state.cartItems)
         },
-        setCartItems(state, action) {
-            state.cartItems = action.payload
+        getCartItems(state) {
+            state.cartItems = getCartItemsFromLS()
             state.quantity = state.cartItems.length
-        }
+        },
+        setChosen(state, action) {
+            const {
+                id,
+                isChosen
+            } = action.payload
+            const index = state.cartItems.findIndex(item => item._id === id)
+            const cartItem = state.cartItems[index]
+            cartItem.isChosen = isChosen
+
+            state.totalPrice = calculateTotalPrice(state.cartItems)
+        },
     }
 })
 

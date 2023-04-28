@@ -7,12 +7,8 @@ import { actions as cartActions } from "../../../store/cart";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Cart() {
-  const dispatch = useDispatch();
-  const _cartItems = useLoaderData();
-  useEffect(() => {
-    dispatch(cartActions.setCartItems(_cartItems));
-  }, []);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
 
   return (
     <Stack padding={4}>
@@ -34,7 +30,7 @@ export default function Cart() {
         <Stack>
           <Typography>Total</Typography>
           <Typography variant="p" fontSize={32} fontWeight={600}>
-            {currencyFormatter.format(1000000)}
+            {currencyFormatter.format(totalPrice)}
           </Typography>
           <Typography fontSize={20} color="#444">
             70% off
@@ -45,17 +41,3 @@ export default function Cart() {
     </Stack>
   );
 }
-
-export const cartLoader = async () => {
-  const resonse = await fetch("http://localhost:3000/api/carts", {
-    withCredentials: true,
-    credentials: "include",
-  });
-
-  if (!resonse.ok) {
-    throw json({ message: "Error when loading cart items!" }, { status: 500 });
-  }
-
-  const { data } = await resonse.json();
-  return data;
-};

@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import Modal from "../../../components/UI/Modal";
 import { actions as authActions } from "../../../store/auth";
+import { actions as cartActions } from "../../../store/cart";
 import { useDispatch } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { setToken } from "../../../utils/auth";
@@ -51,8 +52,9 @@ function LoginModal() {
       } else {
         setToken(data.token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-        dispatch(authActions.setAuth());
+        dispatch(authActions.setAuthen());
         dispatch(authActions.setIsLoggingIn(false));
+        dispatch(cartActions.getCartItems())
       }
     } catch (e) {
       console.log(e.message);
