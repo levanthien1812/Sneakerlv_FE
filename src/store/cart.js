@@ -1,11 +1,10 @@
 import {
+    createAsyncThunk,
     createSlice
 } from "@reduxjs/toolkit";
 import {
-    json
-} from "react-router";
-import {
-    getCartItemsFromLS, setCartItemsToLS
+    fetchCartItems2,
+    saveCartItems
 } from "../utils/cart";
 
 const calculateTotalPrice = (cartItems) => {
@@ -19,11 +18,16 @@ const calculateTotalPrice = (cartItems) => {
     return totalPrice
 }
 
+export const fetchCartItems = createAsyncThunk('cart/fetchCartItems', async (arg, thunkAPI) => {
+    const response = await fetchCartItems2()
+    return response.data.data
+})
+
 const initialState = {
     isCartPopupShow: false,
-    cartItems: getCartItemsFromLS(),
+    cartItems: [],
     totalPrice: 0,
-    quantity: getCartItemsFromLS().length,
+    quantity: 0,
 }
 
 const cartSlice = createSlice({
@@ -49,7 +53,7 @@ const cartSlice = createSlice({
             state.quantity = state.cartItems.length
             state.totalPrice = calculateTotalPrice(state.cartItems)
             // manipulate localStorage
-            setCartItemsToLS(state.cartItems)
+            saveCartItems(state.cartItems)
         },
 
         removeFromCart(state, action) {
@@ -64,7 +68,7 @@ const cartSlice = createSlice({
             state.quantity = state.cartItems.length
             state.totalPrice = calculateTotalPrice(state.cartItems)
             // manipulate localStorage
-            setCartItemsToLS(state.cartItems)
+            saveCartItems(state.cartItems)
         },
         showCartPopup(state) {
             state.isCartPopupShow = true
@@ -80,7 +84,7 @@ const cartSlice = createSlice({
             cartItem.price = cartItem.quantity * cartItem.category.price
 
             state.totalPrice = calculateTotalPrice(state.cartItems)
-            setCartItemsToLS(state.cartItems)
+            saveCartItems(state.cartItems)
         },
 
         decreQuantity(state, action) {
@@ -94,10 +98,11 @@ const cartSlice = createSlice({
             cartItem.price = cartItem.quantity * cartItem.category.price
 
             state.totalPrice = calculateTotalPrice(state.cartItems)
-            setCartItemsToLS(state.cartItems)
+            saveCartItems(state.cartItems)
         },
-        getCartItems(state) {
-            state.cartItems = getCartItemsFromLS()
+        async getCartItems(state) {
+            const res = await fetchCartItems2()
+            state.cartItems = res.data.data
             state.quantity = state.cartItems.length
         },
         setChosen(state, action) {
@@ -111,6 +116,11 @@ const cartSlice = createSlice({
 
             state.totalPrice = calculateTotalPrice(state.cartItems)
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchCartItems.fulfilled, (state, action) => {
+            state.cartItems = action.payload
+        })
     }
 })
 
