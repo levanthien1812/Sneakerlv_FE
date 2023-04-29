@@ -57,15 +57,9 @@ const route = createBrowserRouter([{
 }])
 
 function App() {
-  return <Provider store = {
-      store
-    } >
-    <
-    RouterProvider router = {
-      route
-    }
-  /> </
-  Provider >
+  return <Provider store = {store} >
+    <RouterProvider router={route} />
+  </Provider >
 }
 
 export default App;

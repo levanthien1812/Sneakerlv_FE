@@ -5,9 +5,10 @@ import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
 import { actions as cartActions } from "../../../store/cart";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../../../utils/cart";
 
 export default function Cart() {
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  let cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
 
   return (
