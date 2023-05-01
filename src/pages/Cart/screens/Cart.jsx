@@ -3,11 +3,11 @@ import React, { Fragment, useEffect } from "react";
 import { json, useLoaderData } from "react-router";
 import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
-import { actions as cartActions } from "../../../store/cart";
+import { actions as cartActions, fetchCartItems } from "../../../store/cart";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCartItems } from "../../../utils/cart";
 
 export default function Cart() {
+  const dispatch = useDispatch()
   let cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
 

@@ -13,7 +13,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { json, useLoaderData, useNavigate } from "react-router";
 import { currencyFormatter } from "../../../utils/formatters";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -22,13 +22,15 @@ import RelatedSneakers from "../components/RelatedSneakers";
 import { useDispatch, useSelector } from "react-redux";
 import { actions as UIActions } from "../../../store/ui";
 import { actions as authActions } from "../../../store/auth";
-import { actions as cartAction } from "../../../store/cart";
+import { actions as cartAction, saveCartItems } from "../../../store/cart";
 import MyAlert from "../../../components/UI/Alert";
 import { isAuthenticated } from "../../../utils/auth";
 import IncreDecre from "../../../components/UI/IncreDecre";
-import mongoose from "mongoose"
+import { getCartFromLS } from "../../../utils/cart";
 
 function SneakerDetail() {
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  console.log(cartItems)
   const dispatch = useDispatch();
   const { isNotifShown } = useSelector((state) => state.ui);
   const { sneaker, categories, related } = useLoaderData();
@@ -96,6 +98,7 @@ function SneakerDetail() {
         quantity: quantityChosen,
       };
       dispatch(cartAction.addToCart(itemToAdd));
+      dispatch(saveCartItems(getCartFromLS()));
 
       dispatch(
         UIActions.showNotification({

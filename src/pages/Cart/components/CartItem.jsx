@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { currencyFormatter } from "../../../utils/formatters";
 import IncreDecre from "../../../components/UI/IncreDecre";
-import { actions as cartActions } from "../../../store/cart";
+import { actions as cartActions, saveCartItems } from "../../../store/cart";
 import { useDispatch } from "react-redux";
+import { getCartFromLS } from "../../../utils/cart";
 
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -22,19 +23,23 @@ function CartItem({ item }) {
 
   const incrementQuantityHandler = () => {
     dispatch(cartActions.increQuantity(item._id));
+    dispatch(saveCartItems(getCartFromLS()));
   };
 
   const decrementQuantityHandler = () => {
     dispatch(cartActions.decreQuantity(item._id));
+    dispatch(saveCartItems(getCartFromLS()));
   };
 
   const removeCartItemHandler = () => {
     dispatch(cartActions.removeFromCart(item));
+    dispatch(saveCartItems(getCartFromLS()));
   };
 
   const chooseToBuyHandler = () => {
     setIsChosen(!isChosen);
     dispatch(cartActions.setChosen({ id: item._id, isChosen: !isChosen }));
+    dispatch(saveCartItems(getCartFromLS()));
   };
 
   return (
