@@ -7,6 +7,7 @@ import IncreDecre from "../../../components/UI/IncreDecre";
 import { actions as cartActions, saveCartItems } from "../../../store/cart";
 import { useDispatch } from "react-redux";
 import { getCartFromLS } from "../../../utils/cart";
+import { useNavigate } from "react-router";
 
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
@@ -19,6 +20,7 @@ const StyledRating = styled(Rating)({
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [isChosen, setIsChosen] = useState(false);
 
   const incrementQuantityHandler = () => {
@@ -41,6 +43,11 @@ function CartItem({ item }) {
     dispatch(cartActions.setChosen({ id: item._id, isChosen: !isChosen }));
     dispatch(saveCartItems(getCartFromLS()));
   };
+
+  const clickHandler = () => {
+    console.log(item)
+    navigate('/sneakers/' + item.sneaker.slug)
+  }
 
   return (
     <Stack
@@ -71,11 +78,12 @@ function CartItem({ item }) {
           width="100%"
           src={`http://localhost:3000/images/sneakers/${item.sneaker.id}/${item.sneaker.coverImage}`}
           alt=""
+          onClick={clickHandler}
         />
       </Stack>
       <Stack direction="row" spacing={10} marginRight={10}>
         <Stack>
-          <Typography variant="p">{item.sneaker.name}</Typography>
+          <Typography variant="p" onClick={clickHandler} fontSize={20} marginBottom={1}>{item.sneaker.name}</Typography>
           <Typography variant="p">{item.sneaker.brand.name}</Typography>
           <Stack direction="row">
             <Typography variant="p">
