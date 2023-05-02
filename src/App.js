@@ -22,6 +22,8 @@ import Cart, {
   cartLoader
 } from './pages/Cart/screens/Cart';
 import Home from './pages/Home/Home';
+import Account from './pages/Account/Screens/Account';
+import AccountRoot from './pages/Account/Components/AccountRoot';
 
 const route = createBrowserRouter([{
   path: '/',
@@ -52,6 +54,15 @@ const route = createBrowserRouter([{
     {
       path: 'cart',
       element: <Cart/> ,
+    }, {
+      path: 'account',
+      element: <AccountRoot />,
+      children: [
+        {
+          path: 'profile',
+          element: <Account/>
+        }
+      ]
     }
   ]
 }])

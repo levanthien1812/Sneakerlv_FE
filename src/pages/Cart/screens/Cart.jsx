@@ -1,13 +1,10 @@
 import { Button, Divider, Stack, Typography } from "@mui/material";
 import React, { Fragment, useEffect } from "react";
-import { json, useLoaderData } from "react-router";
 import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
-import { actions as cartActions, fetchCartItems } from "../../../store/cart";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Cart() {
-  const dispatch = useDispatch()
   let cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
 
