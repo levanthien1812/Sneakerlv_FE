@@ -11,42 +11,46 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
-import { getUser } from "../../../utils/auth";
+import { getUser, logout } from "../../../utils/auth";
 import ChangeEmailPopup from "../Components/ChangeEmailPopup";
 import { actions as UIActions } from "../../../store/ui";
 import { useDispatch } from "react-redux";
-import app from '../../../firebase'
+import auth from "../../../firebase";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification
+} from "firebase/auth";
 
 function Account() {
   const user = getUser();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [phoneNum, setPhoneNum] = useState(user.phoneNum || "Not set");
-  const [birthday, setBirthday] = useState(new Date())
-  const [gender, setGender] = useState(user.gender || 'female')
-  const [photo, setPhoto] = useState(user.photo)
-  const [preview, setPreview] = useState()
-  const [isChangingEmail, setIsChangingEmail] = useState(false)
+  const [birthday, setBirthday] = useState(new Date());
+  const [gender, setGender] = useState(user.gender || "female");
+  const [photo, setPhoto] = useState(user.photo);
+  const [preview, setPreview] = useState();
+  const [isChangingEmail, setIsChangingEmail] = useState(false);
 
   const photoChangeHandler = (event) => {
-    setPhoto(event.target.files[0])
-  }
+    setPhoto(event.target.files[0]);
+  };
 
   useEffect(() => {
-    if (typeof(photo) === 'object'){
-      const objectURL = URL.createObjectURL(photo)
-      setPreview(objectURL)
+    if (typeof photo === "object") {
+      const objectURL = URL.createObjectURL(photo);
+      setPreview(objectURL);
 
       return () => URL.revokeObjectURL(objectURL);
     } else {
-      setPreview(photo)
+      setPreview(photo);
     }
-  }, [photo])
+  }, [photo]);
 
   const changeEmailClickHandler = () => {
-    setIsChangingEmail(true)
-  }
+    setIsChangingEmail(true);
+  };
 
   const confirmEmailHandler = (newEmail) => {
     dispatch(
@@ -61,7 +65,7 @@ function Account() {
     setTimeout(() => {
       dispatch(UIActions.hideNotification());
     }, 4000);
-  }
+  };
 
   return (
     <Stack
@@ -104,7 +108,12 @@ function Account() {
                     id="email"
                     defaultValue={email}
                   ></TextField>
-                  <Button sx={{ textTransform: "capitalize" }} onClick={changeEmailClickHandler}>Change</Button>
+                  <Button
+                    sx={{ textTransform: "capitalize" }}
+                    onClick={changeEmailClickHandler}
+                  >
+                    Change
+                  </Button>
                 </td>
               </tr>
               <tr>
@@ -193,7 +202,9 @@ function Account() {
           <Typography>Accepted Format: JPEG, PNG</Typography>
         </Stack>
       </Stack>
-      {isChangingEmail && <ChangeEmailPopup onConfirmEmailHandler={confirmEmailHandler}/>}
+      {isChangingEmail && (
+        <ChangeEmailPopup onConfirmEmailHandler={confirmEmailHandler} />
+      )}
     </Stack>
   );
 }

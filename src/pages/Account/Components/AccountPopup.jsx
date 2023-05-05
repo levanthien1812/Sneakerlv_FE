@@ -1,8 +1,17 @@
 import { Box, Button, Stack } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import { logout } from "../../../utils/auth";
+import { actions as authActions } from "../../../store/auth";
+import { useDispatch } from "react-redux";
 
 function AccountPopup() {
+  const dispatch = useDispatch()
+  const logoutHandler = () => {
+    logout()
+    dispatch(authActions.setAuthen())
+  }
+
   return (
     <Box
       position="absolute"
@@ -21,7 +30,7 @@ function AccountPopup() {
           <Link>My order</Link>
         </Box>
         <Box paddingX={3}>
-          <Button sx={{ width: "100%" }}>Log out</Button>
+          <Button sx={{ width: "100%" }} onClick={logoutHandler}>Log out</Button>
         </Box>
       </Stack>
     </Box>

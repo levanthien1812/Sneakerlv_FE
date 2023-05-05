@@ -1,3 +1,5 @@
+import Cookies from "js-cookie"
+
 export function isTokenExpired() {
     const loginTimeISO = localStorage.getItem('login-time')
     const loginTime = new Date(loginTimeISO)
@@ -39,7 +41,11 @@ export function logout() {
     if (localStorage.getItem('token') && localStorage.getItem('login-time')) {
         localStorage.removeItem('token')
         localStorage.removeItem('login-time')
+        localStorage.removeItem('user')
+        localStorage.removeItem('cartItems')
     }
+
+    Cookies.remove('jwt')
 }
 
 export function getUser() {
