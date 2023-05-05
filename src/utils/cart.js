@@ -23,7 +23,7 @@ export const fetchCart = () => {
 // }
 
 export const getCartFromLS = () => {
-  return JSON.parse(localStorage.getItem('cartItems'))
+  return JSON.parse(localStorage.getItem('cartItems')) || []
 }
 
 export const saveCartToLS = (cartItems) => {

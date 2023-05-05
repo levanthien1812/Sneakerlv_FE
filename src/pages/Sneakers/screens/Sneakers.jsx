@@ -3,8 +3,10 @@ import { json, useLoaderData } from "react-router-dom";
 import SneakerFilter from "../components/SneakerFilter";
 import { Pagination, Stack } from "@mui/material";
 import SneakersList from "../components/SneakersList";
+import auth from "../../../firebase";
 
 function SneakersPage() {
+  console.log(auth.currentUser)
   const [sneakers, setSneakers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
