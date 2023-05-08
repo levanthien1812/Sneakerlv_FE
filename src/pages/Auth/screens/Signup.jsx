@@ -16,11 +16,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoginGoogle } from "../../../utils/loginGoogle";
 import { actions as UIActions } from "../../../store/ui";
 import MyAlert from "../../../components/UI/Alert";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import auth from "../../../firebase";
+import ConfirmEmail from "../components/ConfirmEmail";
+import { setToken } from "../../../utils/auth";
 
 function SignupModal() {
   const dispatch = useDispatch();
@@ -31,52 +28,13 @@ function SignupModal() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  // const [isConfirmingEmail, setIsConfirmingEmail] = useState(false);
   const isNotifShown = useSelector((state) => state.ui.isNotifShown);
 
   const signUpHandler = async (event) => {
     event.preventDefault();
     try {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredentials) => {
-          const user = userCredentials.user;
-          console.log(user);
-          dispatch(
-            UIActions.showNotification({
-              title: "Nofication",
-              message: "We have sent a verification link to your email!",
-              type: "success",
-            })
-          );
-          setTimeout(() => {
-            dispatch(UIActions.hideNotification());
-          }, 4000);
-
-          sendEmailVerification(auth.currentUser, {
-            url: "http://localhost:3006/sneakers",
-            handleCodeInApp: true,
-          })
-            .then(() => {})
-            .catch((err) => {
-              console.log(err);
-            });
-          
-        })
-        .catch((err) => {
-          if (err.code === "auth/email-already-in-use") {
-            dispatch(
-              UIActions.showNotification({
-                title: "Nofication",
-                message: "Email is already exists!",
-                type: "error",
-              })
-            );
-            setTimeout(() => {
-              dispatch(UIActions.hideNotification());
-            }, 3000);
-          }
-        });
-
-      await fetch("http://localhost:3000/api/users/sign-up", {
+      const response = await fetch("http://localhost:3000/api/users/sign-up", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -87,8 +45,40 @@ function SignupModal() {
           name,
           passwordConfirm,
           phoneNum,
+          photo: "http://localhost:3000/images/users/default-user.jpg",
         }),
-      })
+      });
+
+      const data = await response.json();
+
+      if (data.status === "fail") {
+        dispatch(
+          UIActions.showNotification({
+            title: "Error!",
+            type: "error",
+            message: data.message,
+          })
+        );
+        setEmail("");
+        setPassword("");
+      } else {
+        dispatch(authActions.setIsSigningUp(false));
+        setToken(data.token);
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+        dispatch(authActions.setAuthen());
+        dispatch(
+          UIActions.showNotification({
+            title: "Notification",
+            type: "success",
+            message:
+              "Sign up successfully!",
+          })
+        );
+        setTimeout(() => {
+          dispatch(UIActions.hideNotification());
+          // setIsConfirmingEmail(true);
+        }, 2000);
+      }
     } catch (e) {
       console.log(e.message);
     }
@@ -130,6 +120,7 @@ function SignupModal() {
   return (
     <>
       {isNotifShown && <MyAlert />}
+      {/* {isConfirmingEmail && <ConfirmEmail />} */}
       <Modal
         onCloseModal={dispatch.bind(this, authActions.setIsSigningUp(false))}
       >
