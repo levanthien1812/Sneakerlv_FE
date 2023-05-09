@@ -15,12 +15,14 @@ import { Form } from "react-router-dom";
 import { getUser, logout } from "../../../utils/auth";
 import ChangeEmailPopup from "../Components/ChangeEmailPopup";
 import { actions as UIActions } from "../../../store/ui";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import format from "date-fns/format";
+import { actions as authActions } from "../../../store/auth";
 
 function Account() {
   const user = getUser();
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const [name, setName] = useState(user.name || '');
   const [email, setEmail] = useState(user.email);
   const [phoneNum, setPhoneNum] = useState(user.phoneNum || "Not set");
@@ -95,17 +97,22 @@ function Account() {
       userFormdata.append("photo", photo);
 
       const response = await fetch("http://localhost:3000/api/users/account/profile", {
-        method: "patch",
-        body: userFormdata
+        method: "PATCH",
+        body: userFormdata,
+        withCredentials: true,
+        credentials: 'include'
       })
 
       if (!response.ok) {
-        return 
+        setError('Fail to update your profile! Something went wrong.')
       }
 
       const data = await response.json();
 
-      if (data.status === "fail") { }
+      if (data.status === "fail") { 
+        setError(data.message)
+      }
+      
     }
     catch (err) {
 

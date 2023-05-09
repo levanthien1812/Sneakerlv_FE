@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   FormControl,
   IconButton,
@@ -79,7 +80,8 @@ function LoginModal() {
       <Typography fontSize={20} mb={2}>
         Đăng nhập
       </Typography>
-      <form>
+      {error && <Alert severity="error">{error}</Alert>}
+      <form style={{marginTop: "16px"}}>
         <FormControl sx={{ mb: 2, display: "block" }}>
           <TextField
             id="email"
@@ -111,7 +113,7 @@ function LoginModal() {
             label="Password"
           />
         </FormControl>
-        {error && <p>{error}</p>}
+
         <Button variant="contained" type="submit" onClick={loginHandler}>
           Login
         </Button>
