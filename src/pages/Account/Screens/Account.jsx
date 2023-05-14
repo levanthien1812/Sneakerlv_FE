@@ -2,6 +2,7 @@ import {
   Alert,
   Box,
   Button,
+  Divider,
   FormControlLabel,
   FormLabel,
   Radio,
@@ -12,7 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
-import { getUser, logout } from "../../../utils/auth";
+import { getUser, logout, setUser } from "../../../utils/auth";
 import ChangeEmailPopup from "../Components/ChangeEmailPopup";
 import { actions as UIActions } from "../../../store/ui";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,34 +23,36 @@ import { actions as authActions } from "../../../store/auth";
 function Account() {
   const user = getUser();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-  const [name, setName] = useState(user.name || '');
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [name, setName] = useState(user.name || "");
   const [email, setEmail] = useState(user.email);
   const [phoneNum, setPhoneNum] = useState(user.phoneNum || "Not set");
-  const [birthday, setBirthday] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [birthday, setBirthday] = useState(format(new Date(), "yyyy-MM-dd"));
   const [gender, setGender] = useState(user.gender || "female");
   const [photo, setPhoto] = useState(user.photo);
   const [preview, setPreview] = useState();
   const [isChangingEmail, setIsChangingEmail] = useState(false);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
+
+  console.log(typeof photo);
 
   const nameChangeHander = (event) => {
-    setName(event.target.value)
+    setName(event.target.value);
     if (event.target.value.length === 0)
       return setError("Your name must not be empty!");
-    setError(null)
-  }
+    setError(null);
+  };
 
   const birthdayChangeHandler = (event) => {
     if (new Date(event.target.value).getTime() > new Date().getTime())
-      return setError('Your birthday must be before today!')
-    setBirthday(event.target.value)
-    setError(null)
-  }
+      return setError("Your birthday must be before today!");
+    setBirthday(event.target.value);
+    setError(null);
+  };
 
   const genderChangeHandler = (event) => {
-    setGender(event.target.value)
-  }
+    setGender(event.target.value);
+  };
 
   const photoChangeHandler = (event) => {
     setPhoto(event.target.files[0]);
@@ -62,12 +65,12 @@ function Account() {
 
       return () => URL.revokeObjectURL(objectURL);
     } else {
-      setPreview(photo);
+      setPreview("http://localhost:3000/images/users/" + user._id + "/" + photo);
     }
   }, [photo]);
 
   const changeEmailClickHandler = () => {
-    setIsChangingEmail(true)
+    setIsChangingEmail(true);
   };
 
   const confirmEmailHandler = (newEmail) => {
@@ -86,38 +89,39 @@ function Account() {
   };
 
   const updateProfileHandler = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const userFormdata = new FormData();
-      userFormdata.append("name", name)
+      userFormdata.append("name", name);
       userFormdata.append("email", email);
       userFormdata.append("phoneNum", phoneNum);
       userFormdata.append("birthday", birthday);
       userFormdata.append("gender", gender);
       userFormdata.append("photo", photo);
 
-      const response = await fetch("http://localhost:3000/api/users/account/profile", {
-        method: "PATCH",
-        body: userFormdata,
-        withCredentials: true,
-        credentials: 'include'
-      })
+      const response = await fetch(
+        "http://localhost:3000/api/users/account/profile",
+        {
+          method: "PATCH",
+          body: userFormdata,
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
-        setError('Fail to update your profile! Something went wrong.')
+        setError("Fail to update your profile! Something went wrong.");
       }
 
       const data = await response.json();
+      setUser(JSON.stringify(data.data));
+      dispatch(authActions.setUser(data.data));
 
-      if (data.status === "fail") { 
-        setError(data.message)
+      if (data.status === "fail") {
+        setError(data.message);
       }
-      
-    }
-    catch (err) {
-
-    }
-  }
+    } catch (err) {}
+  };
 
   return (
     <Stack
@@ -132,7 +136,8 @@ function Account() {
       <Typography variant="h2" fontSize={24} marginBottom={3}>
         My profile
       </Typography>
-      <Stack>
+      <Divider/>
+      <Stack marginTop={2}>
         {error && <Alert severity="error">{error}</Alert>}
         <Stack direction="row" spacing={3} marginTop={1}>
           <Form style={{ flexGrow: 1, minWidth: "60%" }}>
@@ -239,7 +244,11 @@ function Account() {
                 <tr>
                   <td></td>
                   <td>
-                    <Button variant="contained" onClick={updateProfileHandler} disabled={error !== null}>
+                    <Button
+                      variant="contained"
+                      onClick={updateProfileHandler}
+                      disabled={error !== null}
+                    >
                       Save
                     </Button>
                   </td>

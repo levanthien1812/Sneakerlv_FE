@@ -35,6 +35,7 @@ export function LoginGoogle() {
             dispatch(authActions.setAuthen())
             dispatch(authActions.setIsLoggingIn(false));
             dispatch(fetchCartItems())
+            dispatch(_fetchAddresses());
         } catch (e) {
             console.log(e.message);
         }
