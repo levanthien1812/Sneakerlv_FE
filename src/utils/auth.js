@@ -5,13 +5,13 @@ export function isTokenExpired() {
     const loginTime = new Date(loginTimeISO)
     const now = new Date()
     const duration = now.getTime() - loginTime.getTime()
-    return duration > 1 * 1000 * 60 * 60
+    return duration > 5 * 1000 * 60 * 60
 }
 
 export const setToken = (token) => {
     localStorage.setItem("token", token);
     localStorage.setItem("login-time", (new Date()).toISOString())
-    const EXPIRES_IN = 1
+    const EXPIRES_IN = 5
     setCookies('jwt', token)
     runLogoutTimer(EXPIRES_IN)
 };
@@ -54,6 +54,10 @@ export function getUser() {
         return JSON.parse(user)
     }
     return null
+}
+
+export function setUser(user) {
+    localStorage.setItem('user', user)
 }
 
 export function setCookies(name, value) {

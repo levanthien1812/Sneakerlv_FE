@@ -12,11 +12,12 @@ import {
 import React, { useState } from "react";
 import Modal from "../../../components/UI/Modal";
 import { actions as authActions } from "../../../store/auth";
-import { actions as cartActions } from "../../../store/cart";
+import { actions as cartActions, fetchCartItems } from "../../../store/cart";
 import { useDispatch } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { setToken } from "../../../utils/auth";
 import { LoginGoogle } from "../../../utils/loginGoogle";
+import { _fetchAddresses } from "../../../store/account";
 
 function LoginModal() {
   const dispatch = useDispatch();
@@ -55,7 +56,8 @@ function LoginModal() {
         localStorage.setItem("user", JSON.stringify(data.data.user));
         dispatch(authActions.setAuthen());
         dispatch(authActions.setIsLoggingIn(false));
-        dispatch(cartActions.getCartItems())
+        dispatch(fetchCartItems());
+        dispatch(_fetchAddresses())
       }
     } catch (e) {
       console.log(e.message);

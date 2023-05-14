@@ -3,12 +3,10 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import {
-    fetchCart,
-    fetchCartData,
     getCartFromLS,
-    saveCart,
     saveCartToLS
 } from "../utils/cart";
+import { fetchCart, saveCart } from "../services";
 
 const calculateTotalPrice = (cartItems) => {
     let totalPrice = 0
@@ -22,13 +20,13 @@ const calculateTotalPrice = (cartItems) => {
 }
 
 export const fetchCartItems = createAsyncThunk('cart/fetchCartItems', async (arg, thunkAPI) => {
-    const response = await fetchCart()
-    return response.data.data
+    const data = await fetchCart()
+    return data
 })
 
 export const saveCartItems = createAsyncThunk('cart/saveCartItems', async (cartItems, thunkAPI) => {
-    const response = await saveCart(cartItems)
-    return response.data.data
+    const data = await saveCart(cartItems)
+    return data
 })
 
 const initialState = {
@@ -123,7 +121,7 @@ const cartSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchCartItems.fulfilled, (state, action) => {
             state.cartItems = action.payload
-            console.log(state.cartItems)
+            // console.log(state.cartItems)
             state.quantity = state.cartItems.length
             saveCartToLS(state.cartItems)
         })

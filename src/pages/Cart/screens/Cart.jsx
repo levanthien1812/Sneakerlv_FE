@@ -2,11 +2,17 @@ import { Button, Divider, Stack, Typography } from "@mui/material";
 import React, { Fragment, useEffect } from "react";
 import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../../../store/cart";
 
 export default function Cart() {
   let cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchCartItems())
+  }, [])
 
   return (
     <Stack padding={4}>

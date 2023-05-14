@@ -16,6 +16,7 @@ import Account from "./pages/Account/Screens/Account";
 import AccountRoot from "./pages/Account/Components/AccountRoot";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotAuth from "./components/UI/NotAuth";
+import Addresses from "./pages/Account/Screens/Addresses";
 
 const route = createBrowserRouter([
   {
@@ -55,6 +56,11 @@ const route = createBrowserRouter([
               {
                 path: "profile",
                 element: <Account />,
+              },
+              {
+                path: "addresses",
+                element: <Addresses />,
+                // loader: loadAddresses,
               },
             ],
           },
