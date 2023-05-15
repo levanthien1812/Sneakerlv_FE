@@ -17,17 +17,23 @@ import { getDistricts, getProvinces, getWards } from "../../../services";
 import { useDispatch } from "react-redux";
 import { _fetchAddresses } from "../../../store/account";
 
-function AddAddress({ onClose }) {
-  const [name, setName] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
+function AddAddress({ onClose, address = null }) {
+  const [name, setName] = useState(address ? address.name : "");
+  const [phoneNum, setPhoneNum] = useState(address ? address.phoneNum : "");
   const [provinces, setProvinces] = useState([]);
-  const [provinceChosen, setProvinceChosen] = useState(79);
+  const [provinceChosen, setProvinceChosen] = useState(
+    address ? address.address.province : 79
+  );
   const [districts, setDistricts] = useState([]);
-  const [districtChosen, setDistrictChosen] = useState(785);
+  const [districtChosen, setDistrictChosen] = useState(
+    address ? address.address.district : 785
+  );
   const [wards, setWards] = useState([]);
-  const [wardChosen, setWardChosen] = useState(27595);
-  const [street, setStreet] = useState("");
-  const [isDefault, setIsDefault] = useState(true);
+  const [wardChosen, setWardChosen] = useState(
+    address ? address.address.ward : 27595
+  );
+  const [street, setStreet] = useState(address ? address.address.street : "");
+  const [isDefault, setIsDefault] = useState(address ? address.default : true);
   const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
@@ -94,7 +100,7 @@ function AddAddress({ onClose }) {
     setError(null);
     // console.log("New address: " + JSON.parse(data.data));
     dispatch(_fetchAddresses());
-    onClose()
+    onClose();
   };
 
   return (
@@ -207,7 +213,7 @@ function AddAddress({ onClose }) {
           <FormControlLabel
             control={<Checkbox />}
             label="Set as default address"
-            value={isDefault}
+            defaultChecked={isDefault}
             onChange={(e) => {
               setIsDefault(e.target.checked);
             }}

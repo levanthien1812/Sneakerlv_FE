@@ -6,6 +6,7 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -57,7 +58,7 @@ function LoginModal() {
         dispatch(authActions.setAuthen());
         dispatch(authActions.setIsLoggingIn(false));
         dispatch(fetchCartItems());
-        dispatch(_fetchAddresses())
+        dispatch(_fetchAddresses());
       }
     } catch (e) {
       console.log(e.message);
@@ -79,11 +80,11 @@ function LoginModal() {
     <Modal
       onCloseModal={dispatch.bind(this, authActions.setIsLoggingIn(false))}
     >
-      <Typography fontSize={20} mb={2}>
+      <Typography fontSize={20} mb={2} textAlign="center">
         Đăng nhập
       </Typography>
       {error && <Alert severity="error">{error}</Alert>}
-      <form style={{marginTop: "16px"}}>
+      <form style={{ marginTop: "16px" }}>
         <FormControl sx={{ mb: 2, display: "block" }}>
           <TextField
             id="email"
@@ -91,6 +92,7 @@ function LoginModal() {
             label="Email"
             onChange={changeEmailHandler}
             value={email}
+            fullWidth
           />
         </FormControl>
         <FormControl sx={{ mb: 2, display: "block" }} variant="outlined">
@@ -100,6 +102,7 @@ function LoginModal() {
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={changePasswordHandler}
+            fullWidth
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -116,16 +119,19 @@ function LoginModal() {
           />
         </FormControl>
 
-        <Button variant="contained" type="submit" onClick={loginHandler}>
-          Login
-        </Button>
-        <Button
-          variant="outlined"
-          type="button"
-          onClick={convertToSignupHandler}
-        >
-          Sign Up
-        </Button>
+        <Stack direction="row" spacing={2} justifyContent="center" alignItems="end" marginBottom={2}>
+          <Button variant="contained" type="submit" onClick={loginHandler}>
+            Login
+          </Button>
+          <Typography>or</Typography>
+          <Button
+            variant="outlined"
+            type="button"
+            onClick={convertToSignupHandler}
+          >
+            Sign Up
+          </Button>
+        </Stack>
       </form>
       <LoginGoogle />
     </Modal>

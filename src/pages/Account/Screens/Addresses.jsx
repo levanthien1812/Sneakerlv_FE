@@ -5,10 +5,11 @@ import AddAddress from "../Components/AddAddress";
 import { useDispatch, useSelector } from "react-redux";
 import { _fetchAddresses } from "../../../store/account";
 import { actions as accountActions } from "../../../store/account";
+import Address from "../Components/Address";
 
 function Addresses() {
   const dispatch = useDispatch();
-  const {addresses, isAddingAddress} = useSelector((state) => state.account);
+  const { addresses, isAddingAddress } = useSelector((state) => state.account);
 
   useEffect(() => {
     dispatch(_fetchAddresses());
@@ -42,44 +43,7 @@ function Addresses() {
       <Stack marginTop={2}>
         {addresses.length > 0 &&
           addresses.map((address) => (
-            <Stack
-              key={Math.random()}
-              direction="row"
-              justifyContent="space-between"
-              marginTop={2}
-            >
-              <Stack alignItems="start">
-                <Typography>
-                  {address.name} | {address.phoneNum}
-                </Typography>
-                <Typography>{address.address.street}</Typography>
-                <Typography>
-                  {address.address.ward +
-                    ", " +
-                    address.address.district +
-                    ", " +
-                    address.address.province}
-                </Typography>
-                {address.isDefault && (
-                  <Chip label="Default" color="success" size="small" />
-                )}
-              </Stack>
-              <Stack>
-                <Stack direction="row" spacing={1}>
-                  {!address.isDefault && (
-                    <Button variant="outlined" size="small">
-                      Set as default
-                    </Button>
-                  )}
-                  <Button variant="outlined" size="small">
-                    Update
-                  </Button>
-                  <Button variant="outlined" size="small">
-                    Delete
-                  </Button>
-                </Stack>
-              </Stack>
-            </Stack>
+            <Address key={Math.random()} address={address} />
           ))}
       </Stack>
       {isAddingAddress && (
