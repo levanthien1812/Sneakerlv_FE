@@ -13,7 +13,7 @@ function Header() {
       <nav className={classes["left-nav"]}>
         <ul>
           <li>
-            <NavLink to="home">Home</NavLink>
+            <NavLink to="/sneakers">Home</NavLink>
           </li>
           <li>
             <NavLink>New release</NavLink>

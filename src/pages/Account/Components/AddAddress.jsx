@@ -84,7 +84,11 @@ function AddAddress({ onClose, address = null }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newAddress),
+        body: JSON.stringify(
+          !address
+            ? newAddress
+            : { ...newAddress, id: address._id, isUpdate: true }
+        ),
         credentials: "include",
       }
     );
@@ -230,7 +234,7 @@ function AddAddress({ onClose, address = null }) {
           Cancel
         </Button>
         <Button variant="contained" onClick={saveNewAddressHandler}>
-          Save
+          {address === null ? "Save" : "Update"}
         </Button>
       </Stack>
     </Modal>

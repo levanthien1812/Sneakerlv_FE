@@ -17,6 +17,7 @@ import AccountRoot from "./pages/Account/Components/AccountRoot";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotAuth from "./components/UI/NotAuth";
 import Addresses from "./pages/Account/Screens/Addresses";
+import ChangePassword from "./pages/Account/Screens/ChangePassword";
 
 const route = createBrowserRouter([
   {
@@ -60,7 +61,10 @@ const route = createBrowserRouter([
               {
                 path: "addresses",
                 element: <Addresses />,
-                // loader: loadAddresses,
+              },
+              {
+                path: "change-password",
+                element: <ChangePassword />,
               },
             ],
           },
