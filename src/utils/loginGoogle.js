@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { actions as cartActions } from "../store/cart";
 import { fetchCartItems } from "../store/cart";
+import { Stack } from "@mui/material";
 
 export function LoginGoogle() {
     const dispatch = useDispatch()
@@ -55,6 +56,6 @@ export function LoginGoogle() {
         );
     }, [])
 
-    return <div id="signInByGoogleDiv"></div>
+    return <Stack id="signInByGoogleDiv"></Stack>
 }
 

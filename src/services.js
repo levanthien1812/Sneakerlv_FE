@@ -53,3 +53,15 @@ export const fetchCart = async () => {
   const data = await response.json();
   return data.data;
 };
+
+export const deleteAddress = async (addressId) => {
+  const response = await fetch(
+    "http://localhost:3000/api/users/account/addresses/" + addressId,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  return data;
+};
