@@ -21,7 +21,7 @@ const StyledRating = styled(Rating)({
 function CartItem({ item }) {
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const [isChosen, setIsChosen] = useState(false);
+  const [isChosen, setIsChosen] = useState(item.isChosen);
 
   const incrementQuantityHandler = () => {
     dispatch(cartActions.increQuantity(item._id));

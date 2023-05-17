@@ -18,6 +18,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import NotAuth from "./components/UI/NotAuth";
 import Addresses from "./pages/Account/Screens/Addresses";
 import ChangePassword from "./pages/Account/Screens/ChangePassword";
+import Checkout from "./pages/Receipt/screens/Checkout";
 
 const route = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const route = createBrowserRouter([
             path: "cart",
             element: <Cart />,
           },
+          {
+            path: "checkout",
+            element: <Checkout/>
+          }
         ],
       },
       {
