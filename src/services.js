@@ -42,7 +42,7 @@ export const saveCart = async (cartItems) => {
   });
 
   const data = await response.json();
-  return data;
+  return data.data;
 };
 
 export const fetchCart = async () => {

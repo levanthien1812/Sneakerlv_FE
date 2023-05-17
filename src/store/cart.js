@@ -32,7 +32,7 @@ export const saveCartItems = createAsyncThunk('cart/saveCartItems', async (cartI
 const initialState = {
     isCartPopupShow: false,
     cartItems: getCartFromLS(),
-    totalPrice: 0,
+    totalPrice: calculateTotalPrice(getCartFromLS()),
     quantity: getCartFromLS().length,
 }
 
@@ -116,7 +116,18 @@ const cartSlice = createSlice({
             cartItem.isChosen = isChosen
 
             state.totalPrice = calculateTotalPrice(state.cartItems)
+            saveCartToLS(state.cartItems);
         },
+        order(state, action) {
+            const id = action.payload;
+            state.cartItems.forEach(cartItem => {
+                if (cartItem._id === id) cartItem.isChosen = true
+                else cartItem.isChosen = false
+            });
+
+            state.totalPrice = calculateTotalPrice(state.cartItems);
+            saveCartToLS(state.cartItems);
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCartItems.fulfilled, (state, action) => {
@@ -125,8 +136,9 @@ const cartSlice = createSlice({
             state.quantity = state.cartItems.length
             saveCartToLS(state.cartItems)
         })
-        builder.addCase(saveCartItems.fulfilled, (state, actions) => {
+        builder.addCase(saveCartItems.fulfilled, (state, action) => {
             console.log('Cart saved to database!')
+            saveCartToLS(action.payload);
         })
     }
 })

@@ -4,15 +4,24 @@ import { currencyFormatter } from "../../../utils/formatters";
 import CartItem from "../components/CartItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartItems } from "../../../store/cart";
+import { useNavigate } from "react-router";
 
 export default function Cart() {
-  let cartItems = useSelector((state) => state.cart.cartItems);
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchCartItems())
-  }, [])
+    dispatch(fetchCartItems());
+  }, []);
+
+  const checkoutHandler = () => {
+    const chosenCartItems = cartItems
+      .filter((cartItem) => cartItem.isChosen === true)
+      .map((cartItems) => cartItems._id);
+    navigate("/checkout", { state: { chosenCartItems } });
+  };
 
   return (
     <Stack padding={4}>
@@ -39,7 +48,9 @@ export default function Cart() {
           <Typography fontSize={20} color="#444">
             70% off
           </Typography>
-          <Button variant="contained">Checkout</Button>
+          <Button variant="contained" onClick={checkoutHandler}>
+            Checkout
+          </Button>
         </Stack>
       </Stack>
     </Stack>

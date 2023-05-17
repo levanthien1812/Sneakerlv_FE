@@ -29,9 +29,8 @@ import IncreDecre from "../../../components/UI/IncreDecre";
 import { getCartFromLS } from "../../../utils/cart";
 
 function SneakerDetail() {
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log(cartItems)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isNotifShown } = useSelector((state) => state.ui);
   const { sneaker, categories, related } = useLoaderData();
 
@@ -114,7 +113,24 @@ function SneakerDetail() {
     }
   };
 
-  const orderHandler = () => {};
+  const orderHandler = () => {
+    const itemToAdd = {
+      sneaker,
+      category: categoryChosen,
+      quantity: quantityChosen,
+    };
+    dispatch(cartAction.addToCart(itemToAdd));
+    const orderedItem = getCartFromLS().find(
+      (cartItem) =>
+        cartItem.sneaker._id === itemToAdd.sneaker._id &&
+        cartItem.category._id === itemToAdd.category._id
+    );
+    dispatch(cartAction.order(orderedItem._id));
+    dispatch(saveCartItems(getCartFromLS()));
+    setTimeout(() => {
+      navigate("/cart");
+    }, 500);
+  };
 
   return (
     <Stack padding={3}>
