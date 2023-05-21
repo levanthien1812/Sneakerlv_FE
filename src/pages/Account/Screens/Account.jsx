@@ -34,8 +34,6 @@ function Account() {
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [error, setError] = useState(null);
 
-  console.log(typeof photo);
-
   const nameChangeHander = (event) => {
     setName(event.target.value);
     if (event.target.value.length === 0)

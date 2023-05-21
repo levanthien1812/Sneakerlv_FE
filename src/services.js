@@ -65,3 +65,22 @@ export const deleteAddress = async (addressId) => {
   const data = await response.json();
   return data;
 };
+
+export const placeOrder = async (cartItems, shippingInfo, paymentMethod, totalPrice, shippingFee) => {
+  const response = await fetch("http://localhost:3000/api/orders/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartItems,
+      shippingInfo,
+      paymentMethod,
+      totalPrice,
+      shippingFee
+    }),
+    credentials: "include",
+  });
+  const data = await response.json()
+  return data
+};

@@ -3,10 +3,8 @@ import React from 'react'
 
 function Footer() {
   return (
-    <Stack sx={{
-      backgroundColor: "black",
-      paddingY: "8px",
-
+    <Stack marginTop={8} paddingY={1} sx={{
+      backgroundColor: "black"
     }}>
       <Typography textAlign="center" variant='p' color="white">FOOTER</Typography>
     </Stack>
