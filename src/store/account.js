@@ -21,6 +21,8 @@ const initialState = {
   isAccountPopupShow: false,
   isAddingAddress: false,
   addresses: [],
+  isChangingAddress: false,
+  isCheckingOut: false
 };
 
 const accountSlice = createSlice({
@@ -36,10 +38,15 @@ const accountSlice = createSlice({
     setIsAddingAddress(state, action) {
       state.isAddingAddress = action.payload;
     },
+    setIsChangingAddress(state, action) {
+      state.isChangingAddress = action.payload
+    },
+    setIsCheckingOut(state, action) {
+      state.isCheckingOut = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(_fetchAddresses.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.addresses = action.payload;
     });
   },

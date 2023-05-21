@@ -1,4 +1,4 @@
-import { Button, Chip, Stack, Typography } from "@mui/material";
+import { Button, Checkbox, Chip, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MyDialog from "../../../components/UI/Dialog";
 import {
@@ -7,17 +7,22 @@ import {
   getProvinces,
   getWards,
 } from "../../../services";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { _fetchAddresses } from "../../../store/account";
 import AddAddress from "./AddAddress";
+import { actions as accountActions } from "../../../store/account";
+import { CheckBox } from "@mui/icons-material";
 
-function Address({ address }) {
+function Address({ address, onChoose = null }) {
   const dispatch = useDispatch();
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
   const [ward, setWard] = useState([]);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const { isChangingAddress, isCheckingOut } = useSelector(
+    (state) => state.account
+  );
 
   useEffect(() => {
     async function fetchProvinces() {
@@ -49,8 +54,17 @@ function Address({ address }) {
     dispatch(_fetchAddresses());
   };
 
+  const changeHandler = () => {
+    dispatch(accountActions.setIsChangingAddress(true));
+  };
+
   return (
-    <Stack direction="row" justifyContent="space-between" marginTop={2}>
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      marginTop={2}
+      spacing={2}
+    >
       <Stack alignItems="start">
         <Typography>
           {address.name} | {address.phoneNum}
@@ -62,28 +76,51 @@ function Address({ address }) {
         )}
       </Stack>
       <Stack>
-        <Stack direction="row" spacing={1}>
-          {!address.isDefault && (
-            <Button variant="outlined" size="small">
-              Set as default
+        {!isCheckingOut && (
+          <Stack direction="row" spacing={1}>
+            {!address.isDefault && (
+              <Button variant="outlined" size="small">
+                Set as default
+              </Button>
+            )}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setIsUpdating(true)}
+            >
+              Update
             </Button>
-          )}
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => setIsUpdating(true)}
-          >
-            Update
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            onClick={() => setIsConfirmDelete(true)}
-          >
-            Delete
-          </Button>
-        </Stack>
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              onClick={() => setIsConfirmDelete(true)}
+            >
+              Delete
+            </Button>
+          </Stack>
+        )}
+        {isCheckingOut && !isChangingAddress && (
+          <Stack direction="row" spacing={1}>
+            <Button variant="outlined" size="small" onClick={changeHandler}>
+              Change
+            </Button>
+          </Stack>
+        )}
+        {isCheckingOut && isChangingAddress && (
+          <Stack>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                onChoose(address)
+                dispatch(accountActions.setIsChangingAddress(false))
+              }}
+            >
+              Choose
+            </Button>
+          </Stack>
+        )}
       </Stack>
 
       {isConfirmDelete && (
