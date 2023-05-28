@@ -1,7 +1,7 @@
 import { Container, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { _fetchAddresses } from "../../../store/account";
 import Address from "../../Account/Components/Address";
 import ChooseAddress from "../../Account/Components/ChooseAddress";
@@ -13,12 +13,14 @@ import { placeOrder } from "../../../services";
 
 function Checkout() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const addresses = useSelector((state) => state.account.addresses);
   const [chosenAddress, setChosenAddress] = useState();
   const [shippingFee, setShippingFee] = useState(0);
   const [paymentChosen, setPaymentChosen] = useState("transfer");
+  const [isOrdering, setIsOrdering] = useState(false);
 
   const chosenCartItems = cartItems.filter(
     (cartItem) => cartItem.isChosen === true
@@ -39,15 +41,20 @@ function Checkout() {
   }, []);
 
   const placeOrderHandler = async (totalPrice) => {
-    const data = await placeOrder(
-      chosenCartItems,
-      chosenAddress,
-      paymentChosen,
-      totalPrice,
-      shippingFee
-    );
-
-    console.log(data)
+    setIsOrdering(true);
+    setTimeout(async () => {
+      const data = await placeOrder(
+        chosenCartItems,
+        chosenAddress,
+        paymentChosen,
+        totalPrice,
+        shippingFee
+      );
+      setIsOrdering(false);
+      if (data.data) {
+        navigate("/order-success", { state: { paymentMethod: paymentChosen } });
+      }
+    }, 1000);
   };
 
   return (
@@ -76,6 +83,7 @@ function Checkout() {
           chosenCartItems={chosenCartItems}
           onPlaceOrder={placeOrderHandler}
           shippingFee={shippingFee}
+          isOrdering={isOrdering}
         />
       </Stack>
       {isChangingAddress && (

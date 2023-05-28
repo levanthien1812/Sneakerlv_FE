@@ -27,7 +27,7 @@ function AccountPopup() {
           <Link to="/account/profile">My account</Link>
         </Box>
         <Box textAlign="center" paddingY={1} paddingX={3}>
-          <Link>My order</Link>
+          <Link to="/my-orders">My order</Link>
         </Box>
         <Box paddingX={3}>
           <Button sx={{ width: "100%" }} onClick={logoutHandler}>Log out</Button>

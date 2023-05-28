@@ -39,7 +39,7 @@ function AccountRoot() {
           <Link to="/account/addresses">Pickup Addresses</Link>
           <Link to="/account/payment-methods">Payment methods</Link>
           <Link to="/account/change-password">Change Password</Link>
-          <Link to="/account/orders">
+          <Link to="/my-orders">
             <ShoppingBasket
               sx={{
                 marginRight: "8px",
