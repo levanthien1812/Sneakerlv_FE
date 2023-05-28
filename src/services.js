@@ -66,7 +66,13 @@ export const deleteAddress = async (addressId) => {
   return data;
 };
 
-export const placeOrder = async (cartItems, shippingInfo, paymentMethod, totalPrice, shippingFee) => {
+export const placeOrder = async (
+  cartItems,
+  shippingInfo,
+  paymentMethod,
+  totalPrice,
+  shippingFee
+) => {
   const response = await fetch("http://localhost:3000/api/orders/", {
     method: "POST",
     headers: {
@@ -77,10 +83,23 @@ export const placeOrder = async (cartItems, shippingInfo, paymentMethod, totalPr
       shippingInfo,
       paymentMethod,
       totalPrice,
-      shippingFee
+      shippingFee,
     }),
     credentials: "include",
   });
-  const data = await response.json()
-  return data
+  const data = await response.json();
+  return data;
+};
+
+export const getOrders = async (status) => {
+  const url =
+    status === "all"
+      ? "http://localhost:3000/api/orders/"
+      : "http://localhost:3000/api/orders/?status=" + status;
+
+  const response = await fetch(url, {
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data.data;
 };

@@ -1,9 +1,21 @@
 import React from "react";
-import { Button, Chip, Divider, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Chip,
+  CircularProgress,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../../utils/formatters";
 
-function ReceiptInfo({ chosenCartItems, onPlaceOrder, shippingFee }) {
+function ReceiptInfo({
+  chosenCartItems,
+  onPlaceOrder,
+  shippingFee,
+  isOrdering,
+}) {
   const productsPrice = chosenCartItems.reduce(
     (prev, curr) => prev + curr.category.price * curr.quantity,
     0
@@ -27,6 +39,7 @@ function ReceiptInfo({ chosenCartItems, onPlaceOrder, shippingFee }) {
         style={{ backgroundColor: "white" }}
         divider={<Divider />}
         padding={1}
+        boxShadow={2}
       >
         {chosenCartItems.map((item) => (
           <Stack
@@ -35,6 +48,7 @@ function ReceiptInfo({ chosenCartItems, onPlaceOrder, shippingFee }) {
             height="120px"
             spacing={2}
             padding={1}
+            
           >
             <Stack height="100%">
               <img
@@ -94,7 +108,15 @@ function ReceiptInfo({ chosenCartItems, onPlaceOrder, shippingFee }) {
           style={{ borderRadius: 0, backgroundColor: "orange" }}
           onClick={() => onPlaceOrder(productsPrice + shippingFee)}
         >
-          Place order
+          {isOrdering && (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: "white",
+              }}
+            />
+          )}
+          {!isOrdering && "Place order"}
         </Button>
       </Stack>
     </Stack>

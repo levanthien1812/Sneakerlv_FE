@@ -19,6 +19,8 @@ import NotAuth from "./components/UI/NotAuth";
 import Addresses from "./pages/Account/Screens/Addresses";
 import ChangePassword from "./pages/Account/Screens/ChangePassword";
 import Checkout from "./pages/Receipt/screens/Checkout";
+import SuccessfullOrder from "./pages/Receipt/components/SuccessfullOrder";
+import Orders from "./pages/Account/Screens/Orders";
 
 const route = createBrowserRouter([
   {
@@ -52,36 +54,49 @@ const route = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           {
-            path: "account",
             element: <AccountRoot />,
             children: [
               {
-                path: "profile",
-                element: <Account />,
+                path: "account",
+                children: [
+                  {
+                    path: "profile",
+                    element: <Account />,
+                  },
+                  {
+                    path: "addresses",
+                    element: <Addresses />,
+                  },
+                  {
+                    path: "change-password",
+                    element: <ChangePassword />,
+                  },
+                ],
               },
               {
-                path: "addresses",
-                element: <Addresses />,
-              },
-              {
-                path: "change-password",
-                element: <ChangePassword />,
+                path: "my-orders",
+                element: <Orders />,
               },
             ],
           },
+
           {
             path: "cart",
             element: <Cart />,
           },
           {
             path: "checkout",
-            element: <Checkout/>
-          }
+            element: <Checkout />,
+          },
         ],
       },
       {
         path: "not-authed",
         element: <NotAuth />,
+      },
+      {
+        path: "order-success",
+        element: <SuccessfullOrder />,
       },
     ],
   },

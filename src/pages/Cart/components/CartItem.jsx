@@ -81,7 +81,7 @@ function CartItem({ item }) {
           onClick={clickHandler}
         />
       </Stack>
-      <Stack direction="row" spacing={10} marginRight={10}>
+      <Stack direction="row" spacing={10} marginRight={5}>
         <Stack>
           <Typography variant="p" onClick={clickHandler} fontSize={20} marginBottom={1}>{item.sneaker.name}</Typography>
           <Typography variant="p">{item.sneaker.brand.name}</Typography>
