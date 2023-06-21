@@ -1,5 +1,6 @@
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   Divider,
@@ -63,7 +64,9 @@ function Account() {
 
       return () => URL.revokeObjectURL(objectURL);
     } else {
-      setPreview("http://localhost:3000/images/users/" + user._id + "/" + photo);
+      setPreview(
+        "http://localhost:3000/images/users/" + user._id + "/" + photo
+      );
     }
   }, [photo]);
 
@@ -134,7 +137,7 @@ function Account() {
       <Typography variant="h2" fontSize={24} marginBottom={3}>
         My profile
       </Typography>
-      <Divider/>
+      <Divider />
       <Stack marginTop={2}>
         {error && <Alert severity="error">{error}</Alert>}
         <Stack direction="row" spacing={3} marginTop={1}>
@@ -255,20 +258,12 @@ function Account() {
             </table>
           </Form>
           <Stack alignItems="center" flexGrow={1}>
-            <Box
-              width="200px"
-              height="200px"
-              marginBottom={2}
-              borderRadius="50%"
-              overflow="hidden"
-            >
-              <img src={preview} width="100%" height="100%" />
-            </Box>
+            <Avatar src={preview} sx={{ width: 200, height: 200, border: "2px solid #eee" }}></Avatar>
             <TextField
               type="file"
               size="small"
               name="photo"
-              style={{ marginBottom: "12px" }}
+              style={{ marginBottom: "12px", marginTop: 20 }}
               onChange={photoChangeHandler}
             />
             <Typography>Maximum size: 2MB</Typography>
