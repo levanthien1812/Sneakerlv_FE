@@ -21,6 +21,7 @@ function Checkout() {
   const [shippingFee, setShippingFee] = useState(0);
   const [paymentChosen, setPaymentChosen] = useState("transfer");
   const [isOrdering, setIsOrdering] = useState(false);
+  const totalPrice = cartItems.reduce((prev, curr) => prev + curr.price, 0);
 
   const chosenCartItems = cartItems.filter(
     (cartItem) => cartItem.isChosen === true
@@ -77,6 +78,7 @@ function Checkout() {
           <PaymentMethodInfo
             paymentChosen={paymentChosen}
             setPaymentChosen={setPaymentChosen}
+            totalPrice={totalPrice}
           />
         </Stack>
         <ReceiptInfo

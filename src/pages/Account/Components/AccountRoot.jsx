@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { getUser } from "../../../utils/auth";
 import { Link, Outlet } from "react-router-dom";
@@ -8,19 +8,17 @@ function AccountRoot() {
   const user = getUser();
   return (
     <Stack
-          direction="row"
-          paddingX={16}
-          paddingY={2}
-          spacing={4}
+      direction="row"
+      paddingX={16}
+      paddingY={2}
+      spacing={4}
       sx={{
         backgroundColor: "#eee",
       }}
     >
       <Stack>
         <Stack direction="row" padding={2} spacing={2}>
-          <Box width={60} height={60} borderRadius="50%" overflow="hidden">
-            <img width="100%" height="100%" src={user.photo}></img>
-          </Box>
+          <Avatar src={user.photo} sx={{ width: 50, height: 50 }} />
           <Stack justifyContent="center">
             <Typography fontSize={18}>{user.name}</Typography>
             <Typography textTransform="capitalize">{user.role}</Typography>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Stack, Typography, Select, MenuItem, Chip } from "@mui/material";
+import { currencyFormatter } from "../../../utils/formatters";
 
-function PaymentMethodInfo({ paymentChosen, setPaymentChosen }) {
+function PaymentMethodInfo({ paymentChosen, setPaymentChosen, totalPrice }) {
   const bgWhite = { backgroundColor: "white" };
 
   const paymentChangeHandler = (event) => {
@@ -40,7 +41,8 @@ function PaymentMethodInfo({ paymentChosen, setPaymentChosen }) {
         {paymentChosen === "cash" && (
           <Stack marginTop={2}>
             <Typography>
-              Vui lòng chuẩn bị sẵn số tiền 200000đ khi nhận hàng tại địa điểm
+              Vui lòng chuẩn bị sẵn số tiền{" "}
+              {currencyFormatter.format(totalPrice)} khi nhận hàng tại địa điểm
               đã đề cập ở trên khi shipper gọi
             </Typography>
           </Stack>
@@ -54,7 +56,9 @@ function PaymentMethodInfo({ paymentChosen, setPaymentChosen }) {
               alignItems="center"
             >
               <Typography marginBottom={1}>Tổng thanh toán</Typography>
-              <Typography fontSize={20}>200000đ</Typography>
+              <Typography fontSize={20}>
+                {currencyFormatter.format(totalPrice)}
+              </Typography>
             </Stack>
             <Stack marginTop={2}>
               <Typography marginBottom={1}>Internet Banking</Typography>
